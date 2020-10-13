@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'purposes_barrel.dart';
+import 'sembast_barrel.dart';
 import 'package:purpose_blocs/models/purpose.dart';
 
 class PurposesBloc extends Bloc<PurposesEvent, PurposesState> {

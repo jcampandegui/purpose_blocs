@@ -1,0 +1,1 @@
+enum AppTab { Purposes, Dummy1, Dummy2, Dummy3 }

@@ -24,6 +24,18 @@ class Purpose extends Equatable {
     return 'Purpose { name: $name, streak: $streak, id: $id }';
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'id': this.id,
+      'name': this.name,
+      'streak': this.streak
+    };
+  }
+
+  factory Purpose.fromMap(Map<String, dynamic> map) {
+    return Purpose(map['name'], streak: map['streak'], id: map['id']);
+  }
+
   /*PurposeEntity toEntity() {
     return PurposeEntity(id, name, streak);
   }
