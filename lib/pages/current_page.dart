@@ -30,7 +30,8 @@ class CurrentPage extends StatelessWidget {
       break;
 
       case AppTab.Dummy1: {
-        return CustomInList(itemsPerRow: 7,blockColor: Color.fromARGB(255, 255, 102, 102));
+        //return CustomInList(itemsPerRow: 7,blockColor: Color.fromARGB(255, 255, 102, 102));
+        return TestPage(text: 'Test page index 1');
       }
       break;
 
