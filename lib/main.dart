@@ -8,12 +8,12 @@ import 'package:purpose_blocs/widgets/basic_bottom_nav.dart';
 //void main() => runApp(MyApp());
 void main() {
   runApp(
-    BlocProvider(
+      BlocProvider(
         create: (context) {
           return PurposesBloc()..add(PurposesLoad());
         },
-      child: MyApp(),
-        )
+        child: MyApp(),
+      )
   );
 }
 

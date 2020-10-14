@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:purpose_blocs/blocs/navigation/navigation_barrel.dart';
 import 'package:purpose_blocs/models/app_tab.dart';
 import 'package:purpose_blocs/pages/blocks_page.dart';
+import 'package:purpose_blocs/pages/custom_in_list.dart';
 import 'package:purpose_blocs/pages/test_page.dart';
 
 class CurrentPage extends StatelessWidget {
@@ -29,7 +30,7 @@ class CurrentPage extends StatelessWidget {
       break;
 
       case AppTab.Dummy1: {
-        return TestPage(text: 'Test page index 1');
+        return CustomInList(itemsPerRow: 7,blockColor: Color.fromARGB(255, 255, 102, 102));
       }
       break;
 
