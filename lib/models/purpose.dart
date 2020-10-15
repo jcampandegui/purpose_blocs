@@ -1,12 +1,13 @@
 import 'package:equatable/equatable.dart';
 
+// TODO: id should be set by db not here
 class Purpose extends Equatable {
-  final String id;
+  int id;
   final String name;
   final int streak;
 
   Purpose(this.name, {this.streak = 0, String id}) :
-    this.id = id ?? DateTime.now().microsecondsSinceEpoch.toString();
+    this.id = id ?? DateTime.now().microsecondsSinceEpoch;
 
   Purpose copyWith({String id, String name, int streak}) {
     return Purpose(
