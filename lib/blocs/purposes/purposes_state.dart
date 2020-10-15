@@ -19,7 +19,7 @@ class PurposesLoadSuccess extends PurposesState {
   List<Object> get props => [purposes];
 
   @override
-  String toString() => 'PurposesLoadSuccess { purposes: $purposes }';
+  String toString() => 'PurposesLoadSuccess { number of purposes: ${purposes.length} }';
 }
 
 class PurposesLoadFailure extends PurposesState {}

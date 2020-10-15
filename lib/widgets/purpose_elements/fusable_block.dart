@@ -27,6 +27,7 @@ class FusableBlock extends StatefulWidget {
 class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMixin {
   _FusableBlockState(FusableBlockController _controller) {
     _controller.animationTrigger = triggerAnimation;
+    _controller.resetTrigger = triggerReset;
   }
 
   AnimationController _opacityController;
@@ -46,6 +47,7 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
 
   @override
   void initState() {
+    print('init fusable');
     _opacityController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 300),
@@ -102,7 +104,7 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
         _swapGlowTween(glowAnimationState);
         _glowController.forward();
       } else if(glowAnimationCompleted && glowAnimationState == 'retract') {
-        _resetAll();
+        //_resetAll();
         widget.onComplete();
       }
     });
@@ -133,6 +135,10 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
 
   void triggerAnimation() {
     _opacityController.forward();
+  }
+
+  void triggerReset() {
+    _resetAll();
   }
 
   @override

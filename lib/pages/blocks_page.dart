@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:purpose_blocs/models/purpose.dart';
 import 'package:purpose_blocs/pages/custom_in_list.dart';
-import 'package:purpose_blocs/widgets/purpose_elements/single_purpose.dart';
 
 /*class BlocksPage extends StatelessWidget {
   @override
@@ -70,36 +69,18 @@ class BlocksPage extends StatelessWidget {
       print(state);
       if (state is PurposesLoadSuccess) {
         List<Purpose> purposes = state.purposes;
-        print('Change in blocBuilder');
-        print(purposes);
         return Scaffold(
           //body: SinglePurpose(purpose: purposes[0]),
           body: GridView.count(
             crossAxisCount: 2,
             children: List.generate(purposes.length, (index) {
-              return OpenContainer(
+              return Container(
+                margin: EdgeInsets.all(10),
+                child: OpenContainer(
                   closedBuilder: (_, openContainer) {
                     return GestureDetector(
-                      child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text('aaa'),
-                                Text('bbb')
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text('ccc'),
-                                Text('ddd')
-                              ],
-                            )
-                          ],
-                        )
+                      child: Center(
+                        child: Text(purposes[index].name),
                       ),
                       onTap: openContainer,
                     );
@@ -119,7 +100,8 @@ class BlocksPage extends StatelessWidget {
                       purposesBloc: purposesBloc,
                       id: purposes[index].id,
                     );
-                  });
+                  }),
+              );
               /*return GestureDetector(
                 child: Container(
                   margin: EdgeInsets.all(5),

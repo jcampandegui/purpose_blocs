@@ -35,9 +35,7 @@ class PurposeDao {
   Future<List<Purpose>> getAll() async {
     final snapshots = await _purposeStore.find(await _db);
     return snapshots.map((snapshot) {
-      final purpose = Purpose.fromMap(snapshot.value);
-      purpose.id = snapshot.key;
-      return purpose;
+      return Purpose.fromMap(snapshot.key, snapshot.value);
     }).toList();
   }
 
@@ -45,9 +43,7 @@ class PurposeDao {
     final finder = Finder(sortOrders: [SortOrder('name')]);
     final snapshots = await _purposeStore.find(await _db, finder: finder);
     return snapshots.map((snapshot) {
-      final purpose = Purpose.fromMap(snapshot.value);
-      purpose.id = snapshot.key;
-      return purpose;
+      return Purpose.fromMap(snapshot.key, snapshot.value);
     }).toList();
   }
 }

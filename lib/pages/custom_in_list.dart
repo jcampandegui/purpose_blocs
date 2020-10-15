@@ -10,7 +10,7 @@ class CustomInList extends StatefulWidget {
   final int itemsPerRow;
   final Color blockColor;
   final PurposesBloc purposesBloc;
-  final String id;
+  final int id;
 
   const CustomInList({
     Key key,
@@ -139,20 +139,17 @@ class _CustomInListState extends State<CustomInList> {
       );
     }
     if(last) {
+      if(fController.resetTrigger != null) fController.resetTrigger();
       children.add(
           new FusableBlock(
+            //key: Key(DateTime.now().microsecondsSinceEpoch.toString()),
             width: width,
             height: height,
             margins: EdgeInsets.only(right: (children.length == widget.itemsPerRow - 1) ? 0 : margin, bottom: margin),
             color: widget.blockColor,
             controller: fController,
             onComplete: () {
-              /*setState(() {
-                streak++;
-                rows = streak ~/ widget.itemsPerRow;
-                rest = streak % widget.itemsPerRow;
-              });*/
-              widget.purposesBloc.add(PurposeUpdated(purpose.copyWith(streak: purpose.streak + 1)));
+              widget.purposesBloc.add(UpdatePurpose(purpose.copyWith(streak: purpose.streak + 1)));
             },
           )
       );

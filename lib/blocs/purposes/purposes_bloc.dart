@@ -1,90 +1,52 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:purpose_blocs/models/purpose_dao.dart';
 import 'purposes_barrel.dart';
 import 'package:purpose_blocs/models/purpose.dart';
 
 class PurposesBloc extends Bloc<PurposesEvent, PurposesState> {
-  //final TodosRepositoryFlutter todosRepository;
-  // TODO: replace dummy element and logic to work with a proper DB
-  final List<Purpose> dummy = [
-    new Purpose('Purpose 1', streak: 10),
-    new Purpose('Purpose 2', streak: 1),
-    new Purpose('Purpose 3', streak: 2),
-    new Purpose('Purpose 4', streak: 3),
-  ];
+  PurposeDao _purposeDao = PurposeDao();
 
-  // TODO: update
-  //PurposesBloc({@required this.todosRepository}) : super(PurposesLoadInProgress());
   PurposesBloc() : super(PurposesLoadInProgress());
 
   @override
   Stream<PurposesState> mapEventToState(PurposesEvent event) async* {
-    print('Some event happened => $event');
     if (event is PurposesLoad) {
       yield* _mapPurposesLoadToState();
-    } else if (event is PurposeAdded) {
+    } else if (event is AddPurpose) {
       yield* _mapPurposeAddedToState(event);
-    } else if (event is PurposeUpdated) {
+    } else if (event is UpdatePurpose) {
       yield* _mapPurposeUpdatedToState(event);
-    } else if (event is PurposeDeleted) {
+    } else if (event is DeletePurpose) {
       yield* _mapPurposeDeletedToState(event);
     }
   }
 
   Stream<PurposesState> _mapPurposesLoadToState() async* {
     try {
-      // TODO: update
-      /*final todos = await this.todosRepository.loadTodos();
-      yield TodosLoadSuccess(
-        todos.map(Todo.fromEntity).toList(),
-      );*/
-      final purposes = dummy;
-      yield PurposesLoadSuccess(purposes);
+      yield* _reloadPurposes();
     } catch (_) {
       yield PurposesLoadFailure();
     }
   }
 
-  Stream<PurposesState> _mapPurposeAddedToState(PurposeAdded event) async* {
-    if (state is PurposesLoadSuccess) {
-      final List<Purpose> updatedPurposes = List.from(
-          (state as PurposesLoadSuccess).purposes)
-        ..add(event.purpose);
-      yield PurposesLoadSuccess(updatedPurposes);
-      // TODO: update with DB save
-      //_saveTodos(updatedPurposes);
-    }
+  Stream<PurposesState> _mapPurposeAddedToState(AddPurpose event) async* {
+    await _purposeDao.insert(event.purpose);
+    yield* _reloadPurposes();
   }
 
-  Stream<PurposesState> _mapPurposeUpdatedToState(PurposeUpdated event) async* {
-    if (state is PurposesLoadSuccess) {
-      final List<Purpose> updatedPurposes = (state as PurposesLoadSuccess).purposes.map((
-          purpose) {
-        return purpose.id == event.purpose.id ? event.purpose : purpose;
-      }).toList();
-      print(updatedPurposes);
-      yield PurposesLoadSuccess(updatedPurposes);
-      // TODO: update with DB save
-      //_saveTodos(updatedPurposes);
-    }
+  Stream<PurposesState> _mapPurposeUpdatedToState(UpdatePurpose event) async* {
+    await _purposeDao.update(event.purpose);
+    yield* _reloadPurposes();
   }
 
-  Stream<PurposesState> _mapPurposeDeletedToState(PurposeDeleted event) async* {
-    if (state is PurposesLoadSuccess) {
-      final updatedPurposes = (state as PurposesLoadSuccess)
-          .purposes
-          .where((purpose) => purpose.id != event.purpose.id)
-          .toList();
-      yield PurposesLoadSuccess(updatedPurposes);
-      // TODO: update with DB save
-      //_saveTodos(updatedPurposes);
-    }
+  Stream<PurposesState> _mapPurposeDeletedToState(DeletePurpose event) async* {
+    await _purposeDao.delete(event.purpose);
+    yield* _reloadPurposes();
   }
 
-  // TODO: implement save with proper DB
-  /*Future _saveTodos(List<Todo> todos) {
-    return todosRepository.saveTodos(
-      todos.map((todo) => todo.toEntity()).toList(),
-    );
-  }*/
+  Stream<PurposesState> _reloadPurposes() async* {
+    final List<Purpose > purposes = await _purposeDao.getAll();
+    yield PurposesLoadSuccess(purposes);
+  }
 }

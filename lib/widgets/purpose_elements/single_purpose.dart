@@ -153,7 +153,7 @@ class SinglePurpose extends StatelessWidget {
                 child: Icon(Icons.add),
                 backgroundColor: Colors.black87,
                 onPressed: () {
-                  purposesBloc.add(PurposeUpdated(purpose.copyWith(streak: purpose.streak + 1)));
+                  purposesBloc.add(UpdatePurpose(purpose.copyWith(streak: purpose.streak + 1)));
                 },
               ),
               floatingActionButtonLocation: FloatingActionButtonLocation.endTop,

@@ -2,18 +2,18 @@ import 'package:equatable/equatable.dart';
 
 // TODO: id should be set by db not here
 class Purpose extends Equatable {
-  int id;
+  final int id;
   final String name;
   final int streak;
 
-  Purpose(this.name, {this.streak = 0, String id}) :
-    this.id = id ?? DateTime.now().microsecondsSinceEpoch;
+  Purpose(this.name, {this.streak = 0, int id}) :
+    this.id = id ?? null;
 
   Purpose copyWith({String id, String name, int streak}) {
     return Purpose(
       name ?? this.name,
       streak: streak ?? this.streak,
-      id: id ?? this.id
+      id: id ?? this.id,
     );
   }
 
@@ -27,14 +27,13 @@ class Purpose extends Equatable {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': this.id,
       'name': this.name,
       'streak': this.streak
     };
   }
 
-  factory Purpose.fromMap(Map<String, dynamic> map) {
-    return Purpose(map['name'], streak: map['streak'], id: map['id']);
+  factory Purpose.fromMap(int id, Map<String, dynamic> map) {
+    return Purpose(map['name'], streak: map['streak'], id: id);
   }
 
   /*PurposeEntity toEntity() {

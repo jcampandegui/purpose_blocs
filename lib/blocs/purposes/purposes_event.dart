@@ -10,38 +10,38 @@ abstract class PurposesEvent extends Equatable {
 
 class PurposesLoad extends PurposesEvent {}
 
-class PurposeAdded extends PurposesEvent {
+class AddPurpose extends PurposesEvent {
   final Purpose purpose;
 
-  const PurposeAdded(this.purpose);
+  const AddPurpose(this.purpose);
 
   @override
   List<Object> get props => [purpose];
 
   @override
-  String toString() => 'PurposeAdded { purpose: $purpose }';
+  String toString() => 'AddPurpose { purpose: $purpose }';
 }
 
-class PurposeUpdated extends PurposesEvent {
+class UpdatePurpose extends PurposesEvent {
   final Purpose purpose;
 
-  const PurposeUpdated(this.purpose);
+  const UpdatePurpose(this.purpose);
 
   @override
   List<Object> get props => [purpose];
 
   @override
-  String toString() => 'PurposeUpdated { purpose: $purpose }';
+  String toString() => 'UpdatePurpose { purpose: $purpose }';
 }
 
-class PurposeDeleted extends PurposesEvent {
+class DeletePurpose extends PurposesEvent {
   final Purpose purpose;
 
-  const PurposeDeleted(this.purpose);
+  const DeletePurpose(this.purpose);
 
   @override
   List<Object> get props => [purpose];
 
   @override
-  String toString() => 'PurposeDeleted { purpose: $purpose }';
+  String toString() => 'DeletePurpose { purpose: $purpose }';
 }
