@@ -24,14 +24,36 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Purpose blocs',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            backgroundColor: Colors.black87,
-            selectedItemColor: Colors.deepOrangeAccent,
-            unselectedItemColor: Colors.white70
-        ),
-        bottomAppBarColor: Colors.black45
+        brightness: Brightness.dark
       ),
+      darkTheme: ThemeData(
+        scaffoldBackgroundColor: Colors.black54,
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: Color.fromARGB(255, 255, 50, 50),
+          selectedItemColor: Color.fromARGB(255, 200, 50, 50),
+        ),
+        popupMenuTheme: PopupMenuThemeData(
+          color: Colors.black87,
+          textStyle: TextStyle(
+            color: Colors.white
+          )
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.white
+        ),
+        textTheme: TextTheme(
+          headline1: TextStyle(
+            color: Colors.white
+          ),
+          bodyText1: TextStyle(
+              color: Colors.white
+          ),
+          bodyText2: TextStyle(
+              color: Colors.white
+          ),
+        )
+      ),
+      themeMode: ThemeMode.system,
       home: MultiBlocProvider(
         providers: [
           BlocProvider<NavigationBloc>(

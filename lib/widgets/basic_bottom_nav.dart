@@ -16,8 +16,9 @@ class BasicBottomNav extends StatelessWidget {
     return BlocBuilder<NavigationBloc, AppTab>(
         builder: (context, appTab) {
           return BottomNavigationBar(
+            backgroundColor: Color.fromARGB(255, 20, 20, 20),
             items: [
-              BottomNavigationBarItem(icon: Icon(Icons.widgets), label: 'Propóstios', backgroundColor: Colors.black87),
+              BottomNavigationBarItem(icon: Icon(Icons.widgets), label: 'Propóstios', backgroundColor: Color.fromARGB(255, 20, 20, 20),),
               BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: 'Nav 2'),
               BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: 'Nav 3'),
               BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: 'Nav 4'),

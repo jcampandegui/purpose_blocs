@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:purpose_blocs/models/purpose.dart';
 import 'package:purpose_blocs/pages/custom_in_list.dart';
+import 'package:purpose_blocs/widgets/purpose_elements/purpose_widget_all_or_nothing.dart';
 
 class BlocksPage extends StatelessWidget {
   @override
@@ -16,31 +17,20 @@ class BlocksPage extends StatelessWidget {
             crossAxisCount: 2,
             children: List.generate(purposes.length, (index) {
               return Container(
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.only(top: 10, bottom: 10, left: index % 2 == 0 ? 20 : 10, right: index % 2 == 0 ? 10 : 20),
                 child: OpenContainer(
                     closedBuilder: (_, openContainer) {
                       return InkWell(
-                        child: Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('cositas'),
-                              Text('cositas'),
-                              Text('cositas'),
-                              Text('cositas'),
-                            ],
-                          ),
-                        ),
+                        child: PurposeWidgetAllOrNothing(purpose: purposes[index],),
                         onTap: openContainer,
                       );
                     },
-                    //closedColor: Color.fromARGB(255, 255, 102, 102),
-                    //openColor: Color.fromARGB(255, 255, 102, 102),
-                    //closedElevation: 1,
-                    //transitionType: ContainerTransitionType.fade,
-                    transitionDuration: Duration(milliseconds: 600),
-                    /*closedShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),*/
+                    closedElevation: 0,
+                    closedColor: Color.fromARGB(150, 200, 50, 50),
+                    closedShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    transitionDuration: Duration(milliseconds: 400),
                     openBuilder: (context, closeContainer) {
                       PurposesBloc purposesBloc =
                           BlocProvider.of<PurposesBloc>(context);
@@ -60,7 +50,8 @@ class BlocksPage extends StatelessWidget {
             }),
           ),
           floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
+            backgroundColor: Color.fromARGB(255, 200, 50, 50),
+            child: Icon(Icons.add, color: Colors.white,),
             onPressed: () => _showModalBottomSheet(context),
           ),
         );
@@ -83,6 +74,7 @@ class BlocksPage extends StatelessWidget {
   void _showModalBottomSheet(context) {
     showModalBottomSheet(
         context: context,
+        backgroundColor: Color.fromARGB(255, 20, 20, 20),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20))),
@@ -93,9 +85,13 @@ class BlocksPage extends StatelessWidget {
                 Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.deepOrangeAccent)),
+                        color: Color.fromARGB(200, 200, 50, 50),
+                    ),
                     margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                    child: GestureDetector(
+                    child: InkWell(
+                      customBorder: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                      ),
                       child: Row(
                         children: [
                           Container(
@@ -127,11 +123,47 @@ class BlocksPage extends StatelessWidget {
                             .add(AddPurpose(p));
                       },
                     )),
-                new ListTile(
-                  leading: new Icon(Icons.timer),
-                  title: new Text('Actividad cronometrada'),
-                  onTap: () => {},
-                ),
+                Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color.fromARGB(200, 80, 80, 200),
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    child: InkWell(
+                      customBorder: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(right: 20, left: 10),
+                            child: Icon(Icons.calendar_today_sharp),
+                          ),
+                          Expanded(
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Tipo 2',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                        'Descripcion tipo 2')
+                                  ],
+                                ),
+                              ))
+                        ],
+                      ),
+                      onTap: () {
+                        Purpose p = new Purpose(
+                            DateTime.now().microsecondsSinceEpoch.toString());
+                        BlocProvider.of<PurposesBloc>(context)
+                            .add(AddPurpose(p));
+                      },
+                    )),
               ],
             ),
           );

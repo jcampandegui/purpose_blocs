@@ -19,21 +19,7 @@ class CurrentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationBloc, AppTab>(
         builder: (context, appTab) {
-          //return _getPageByIndex(appTab);
-          return PageRouteBuilder(
-              settings: this,
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                return SharedAxisTransition(
-                  fillColor: Theme.of(context).cardColor,
-                  animation: animation,
-                  secondaryAnimation: secondaryAnimation,
-                  transitionType: SharedAxisTransitionType.horizontal,
-                  child: child,
-                );
-              },
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return screen;
-              });
+          return _getPageByIndex(appTab);
         });
   }
 
@@ -69,34 +55,5 @@ class CurrentPage extends StatelessWidget {
       }
       break;
     }
-  }
-}
-
-class SharedAxisTransitionPageWrapper extends Page {
-  const SharedAxisTransitionPageWrapper(
-      {@required this.screen, @required this.transitionKey})
-      : assert(screen != null),
-        assert(transitionKey != null),
-        super(key: transitionKey);
-
-  final Widget screen;
-  final ValueKey transitionKey;
-
-  @override
-  Route createRoute(BuildContext context) {
-    return PageRouteBuilder(
-        settings: this,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return SharedAxisTransition(
-            fillColor: Theme.of(context).cardColor,
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            transitionType: SharedAxisTransitionType.horizontal,
-            child: child,
-          );
-        },
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return screen;
-        });
   }
 }
