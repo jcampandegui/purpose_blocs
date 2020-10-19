@@ -113,7 +113,7 @@ class SinglePurpose extends StatelessWidget {
             int rowsToDraw = purpose.streak < 3 ? 1 : purpose.streak ~/ 3;
             int rest = purpose.streak < 3 ? 0 : purpose.streak % 3;
             return  Scaffold(
-              backgroundColor: Color.fromARGB(255, 40,40, 40),
+              backgroundColor: Color.fromARGB(255, 255,255, 255),
               appBar: AppBar(
                 backgroundColor: Colors.black87,
                 title: Center(

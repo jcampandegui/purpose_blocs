@@ -9,11 +9,9 @@ class BlocksPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PurposesBloc, PurposesState>(builder: (context, state) {
-      print(state);
       if (state is PurposesLoadSuccess) {
         List<Purpose> purposes = state.purposes;
         return Scaffold(
-          //body: SinglePurpose(purpose: purposes[0]),
           body: GridView.count(
             crossAxisCount: 2,
             children: List.generate(purposes.length, (index) {
@@ -21,27 +19,41 @@ class BlocksPage extends StatelessWidget {
                 margin: EdgeInsets.all(10),
                 child: OpenContainer(
                     closedBuilder: (_, openContainer) {
-                      return GestureDetector(
-                        child: Center(
-                          child: Text(purposes[index].name),
+                      return InkWell(
+                        child: Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('cositas'),
+                              Text('cositas'),
+                              Text('cositas'),
+                              Text('cositas'),
+                            ],
+                          ),
                         ),
                         onTap: openContainer,
                       );
                     },
-                    closedColor: Color.fromARGB(255, 255, 102, 102),
-                    openColor: Color.fromARGB(255, 255, 102, 102),
-                    closedElevation: 1,
-                    transitionType: ContainerTransitionType.fade,
-                    closedShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    openBuilder: (_, closeContainer) {
+                    //closedColor: Color.fromARGB(255, 255, 102, 102),
+                    //openColor: Color.fromARGB(255, 255, 102, 102),
+                    //closedElevation: 1,
+                    //transitionType: ContainerTransitionType.fade,
+                    transitionDuration: Duration(milliseconds: 600),
+                    /*closedShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),*/
+                    openBuilder: (context, closeContainer) {
                       PurposesBloc purposesBloc =
                           BlocProvider.of<PurposesBloc>(context);
-                      return CustomInList(
-                        itemsPerRow: 7,
-                        blockColor: Color.fromARGB(255, 255, 102, 102),
-                        purposesBloc: purposesBloc,
-                        id: purposes[index].id,
+                      return Container(
+                        color: Colors.blueAccent,
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: CustomInList(
+                          itemsPerRow: 7,
+                          blockColor: Color.fromARGB(255, 255, 102, 102),
+                          purposesBloc: purposesBloc,
+                          id: purposes[index].id,
+                        )
                       );
                     }),
               );
