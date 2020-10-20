@@ -19,6 +19,8 @@ class PurposesBloc extends Bloc<PurposesEvent, PurposesState> {
       yield* _mapPurposeUpdatedToState(event);
     } else if (event is DeletePurpose) {
       yield* _mapPurposeDeletedToState(event);
+    } else if (event is LoadPurposesInDay) {
+      yield* _mapLoadPurposesInDayToState(event);
     }
   }
 
@@ -43,6 +45,12 @@ class PurposesBloc extends Bloc<PurposesEvent, PurposesState> {
   Stream<PurposesState> _mapPurposeDeletedToState(DeletePurpose event) async* {
     await _purposeDao.delete(event.purpose);
     yield* _reloadPurposes();
+  }
+
+  Stream<PurposesState> _mapLoadPurposesInDayToState(LoadPurposesInDay event) async* {
+    int weekDay = event.date.weekday;
+    final List<Purpose > purposes = await _purposeDao.getForSelectedDay(weekDay);
+    yield PurposesLoadSuccess(purposes);
   }
 
   Stream<PurposesState> _reloadPurposes() async* {

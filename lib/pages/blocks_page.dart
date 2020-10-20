@@ -75,7 +75,7 @@ class BlocksPage extends StatelessWidget {
       } else {
         return Scaffold(
           body: Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 200, 50, 50)),),
           ),
         );
       }

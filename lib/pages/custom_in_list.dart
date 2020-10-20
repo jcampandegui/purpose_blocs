@@ -4,7 +4,6 @@ import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:purpose_blocs/models/purpose.dart';
 import 'package:purpose_blocs/widgets/purpose_elements/fusable_block.dart';
 import 'package:purpose_blocs/widgets/purpose_elements/fusable_block_controller.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class CustomInList extends StatefulWidget {
   final int itemsPerRow;
@@ -49,8 +48,9 @@ class _CustomInListState extends State<CustomInList> {
         builder: (context, state) {
           if(state is PurposesLoadSuccess) {
             Purpose purpose = state.purposes.singleWhere((element) => element.id == widget.id);
-            rows = purpose.streak ~/ widget.itemsPerRow;
-            rest = purpose.streak % widget.itemsPerRow;
+            int streak = purpose.getStreakNumber();
+            rows = streak ~/ widget.itemsPerRow;
+            rest = streak % widget.itemsPerRow;
             return Container(
               child: Scaffold(
                 appBar: AppBar(
@@ -74,7 +74,7 @@ class _CustomInListState extends State<CustomInList> {
                                 double margin = 5;
                                 double blockWidth = (MediaQuery.of(context).size.width - listPadding * 2 - margin * widget.itemsPerRow) / widget.itemsPerRow;
                                 double blockHeight = (MediaQuery.of(context).size.width - listPadding * 2 - margin * widget.itemsPerRow) / widget.itemsPerRow;
-                                List<Widget> children = _buildRowChildren(purpose, index == rows, blockWidth, blockHeight, margin);
+                                List<Widget> children = _buildRowChildren(purpose, streak, index == rows, blockWidth, blockHeight, margin);
                                 return Container(
                                   padding: EdgeInsets.only(top: index == rows ? listPadding * 3 : 0),
                                   child: Row(
@@ -108,7 +108,7 @@ class _CustomInListState extends State<CustomInList> {
     );
   }
 
-  List<Widget> _buildRowChildren(Purpose purpose, bool last, double width, double height, double margin) {
+  List<Widget> _buildRowChildren(Purpose purpose, int streak, bool last, double width, double height, double margin) {
     List<Widget> children = [];
     int inLine = last ? rest : widget.itemsPerRow;
     for(int i = 0; i < inLine; i++) {
@@ -127,14 +127,15 @@ class _CustomInListState extends State<CustomInList> {
       if(fController.resetTrigger != null) fController.resetTrigger();
       children.add(
           new FusableBlock(
-            //key: Key(DateTime.now().microsecondsSinceEpoch.toString()),
             width: width,
             height: height,
             margins: EdgeInsets.only(right: (children.length == widget.itemsPerRow - 1) ? 0 : margin, bottom: margin),
             color: widget.blockColor,
             controller: fController,
             onComplete: () {
-              widget.purposesBloc.add(UpdatePurpose(purpose.copyWith(streak: purpose.streak + 1)));
+              Map<String, bool> updatedStreak = new Map.from(purpose.streak);
+              updatedStreak['${DateTime.now().millisecondsSinceEpoch.toString()}'] = true;
+              widget.purposesBloc.add(UpdatePurpose(purpose.copyWith(streak: updatedStreak)));
             },
           )
       );

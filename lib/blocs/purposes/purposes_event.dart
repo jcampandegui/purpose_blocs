@@ -45,3 +45,15 @@ class DeletePurpose extends PurposesEvent {
   @override
   String toString() => 'DeletePurpose { purpose: $purpose }';
 }
+
+class LoadPurposesInDay extends PurposesEvent {
+  final DateTime date;
+
+  const LoadPurposesInDay(this.date);
+
+  @override
+  List<Object> get props => [date];
+
+  @override
+  String toString() => 'LoadPurposesInDay { date: $date }';
+}

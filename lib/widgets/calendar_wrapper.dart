@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarWrapper extends StatefulWidget {
@@ -47,10 +49,7 @@ class _CalendarWrapperState extends State<CalendarWrapper> {
             ),
             selectedColor: Color.fromARGB(255, 200, 50, 50)
         ),
-        onDaySelected: (date, map) {
-          print(date);
-          print(map);
-        },
+        onDaySelected: (date, map) => BlocProvider.of<PurposesBloc>(context).add(LoadPurposesInDay(date))
       ),
     );
   }
