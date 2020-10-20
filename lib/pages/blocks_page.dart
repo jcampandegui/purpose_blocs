@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:purpose_blocs/models/purpose.dart';
 import 'package:purpose_blocs/pages/custom_in_list.dart';
+import 'package:purpose_blocs/widgets/calendar_wrapper.dart';
 import 'package:purpose_blocs/widgets/purpose_elements/purpose_widget_all_or_nothing.dart';
+import 'dart:math';
 
 class BlocksPage extends StatelessWidget {
   @override
@@ -13,41 +15,50 @@ class BlocksPage extends StatelessWidget {
       if (state is PurposesLoadSuccess) {
         List<Purpose> purposes = state.purposes;
         return Scaffold(
-          body: GridView.count(
-            crossAxisCount: 2,
-            children: List.generate(purposes.length, (index) {
-              return Container(
-                margin: EdgeInsets.only(top: 10, bottom: 10, left: index % 2 == 0 ? 20 : 10, right: index % 2 == 0 ? 10 : 20),
-                child: OpenContainer(
-                    closedBuilder: (_, openContainer) {
-                      return InkWell(
-                        child: PurposeWidgetAllOrNothing(purpose: purposes[index],),
-                        onTap: openContainer,
-                      );
-                    },
-                    closedElevation: 0,
-                    closedColor: Color.fromARGB(150, 200, 50, 50),
-                    closedShape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    transitionDuration: Duration(milliseconds: 400),
-                    openBuilder: (context, closeContainer) {
-                      PurposesBloc purposesBloc =
-                          BlocProvider.of<PurposesBloc>(context);
+          body: SafeArea(
+            child: Column(
+              children: [
+                CalendarWrapper(),
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    children: List.generate(purposes.length, (index) {
                       return Container(
-                        color: Colors.blueAccent,
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        child: CustomInList(
-                          itemsPerRow: 7,
-                          blockColor: Color.fromARGB(255, 255, 102, 102),
-                          purposesBloc: purposesBloc,
-                          id: purposes[index].id,
-                        )
+                        margin: EdgeInsets.only(top: 10, bottom: 10, left: index % 2 == 0 ? 20 : 10, right: index % 2 == 0 ? 10 : 20),
+                        child: OpenContainer(
+                            closedBuilder: (_, openContainer) {
+                              return InkWell(
+                                child: PurposeWidgetAllOrNothing(purpose: purposes[index],),
+                                onTap: openContainer,
+                              );
+                            },
+                            closedElevation: 0,
+                            closedColor: Color.fromARGB(150, 200, 50, 50),
+                            closedShape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            transitionDuration: Duration(milliseconds: 400),
+                            openBuilder: (context, closeContainer) {
+                              PurposesBloc purposesBloc =
+                              BlocProvider.of<PurposesBloc>(context);
+                              return Container(
+                                  color: Colors.blueAccent,
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height,
+                                  child: CustomInList(
+                                    itemsPerRow: 7,
+                                    blockColor: Color.fromARGB(255, 255, 102, 102),
+                                    purposesBloc: purposesBloc,
+                                    id: purposes[index].id,
+                                  )
+                              );
+                            }),
                       );
                     }),
-              );
-            }),
+                  ),
+                ),
+              ],
+            ),
           ),
           floatingActionButton: FloatingActionButton(
             backgroundColor: Color.fromARGB(255, 200, 50, 50),
@@ -118,7 +129,17 @@ class BlocksPage extends StatelessWidget {
                       ),
                       onTap: () {
                         Purpose p = new Purpose(
-                            DateTime.now().microsecondsSinceEpoch.toString());
+                            DateTime.now().microsecondsSinceEpoch.toString(),
+                          repeatDays: {
+                              '1': Random().nextBool(),
+                              '2': Random().nextBool(),
+                              '3': Random().nextBool(),
+                              '4': Random().nextBool(),
+                              '5': Random().nextBool(),
+                              '6': Random().nextBool(),
+                              '7': Random().nextBool()
+                            }
+                        );
                         BlocProvider.of<PurposesBloc>(context)
                             .add(AddPurpose(p));
                       },

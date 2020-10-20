@@ -31,7 +31,6 @@ class _CustomInListState extends State<CustomInList> {
 
   FusableBlockController fController;
   ScrollController _sController;
-  CalendarController _calendarController;
 
   @override
   void initState() {
@@ -39,7 +38,6 @@ class _CustomInListState extends State<CustomInList> {
 
     fController = new FusableBlockController();
     _sController = new ScrollController();
-    _calendarController = new CalendarController();
 
     super.initState();
   }
@@ -65,21 +63,6 @@ class _CustomInListState extends State<CustomInList> {
                 body: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TableCalendar(
-                      //locale: 'es_ES',
-                      calendarController: _calendarController,
-                      initialCalendarFormat: CalendarFormat.week,
-                      startingDayOfWeek: StartingDayOfWeek.monday,
-                      availableCalendarFormats: {CalendarFormat.week: 'Week'},
-                      calendarStyle: CalendarStyle(
-                          weekdayStyle: TextStyle(
-                              color: Colors.white
-                          ),
-                          weekendStyle: TextStyle(
-                              color: Colors.blueAccent
-                          )
-                      ),
-                    ),
                     Flexible(
                         child: Container(
                           margin: EdgeInsets.all(listPadding),
@@ -162,7 +145,6 @@ class _CustomInListState extends State<CustomInList> {
   @override
   void dispose() {
     _sController.dispose();
-    _calendarController.dispose();
     super.dispose();
   }
 }

@@ -46,7 +46,9 @@ class PurposesBloc extends Bloc<PurposesEvent, PurposesState> {
   }
 
   Stream<PurposesState> _reloadPurposes() async* {
-    final List<Purpose > purposes = await _purposeDao.getAll();
+    //final List<Purpose > purposes = await _purposeDao.getAll();
+    int weekDay = DateTime.now().weekday;
+    final List<Purpose > purposes = await _purposeDao.getForSelectedDay(weekDay);
     yield PurposesLoadSuccess(purposes);
   }
 }

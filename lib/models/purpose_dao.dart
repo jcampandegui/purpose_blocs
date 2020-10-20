@@ -46,4 +46,12 @@ class PurposeDao {
       return Purpose.fromMap(snapshot.key, snapshot.value);
     }).toList();
   }
+
+  Future<List<Purpose>> getForSelectedDay(int weekDay) async {
+    final finder = Finder(filter: Filter.equals('repeatDays.$weekDay', true));
+    final snapshots = await _purposeStore.find(await _db, finder: finder);
+    return snapshots.map((snapshot) {
+      return Purpose.fromMap(snapshot.key, snapshot.value);
+    }).toList();
+  }
 }
