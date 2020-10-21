@@ -27,33 +27,38 @@ class _CalendarWrapperState extends State<CalendarWrapper> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 10, left: 5, right: 5),
-      child: TableCalendar(
-        locale: 'es_ES',
-        calendarController: _calendarController,
-        initialCalendarFormat: CalendarFormat.week,
-        startingDayOfWeek: StartingDayOfWeek.monday,
-        availableCalendarFormats: {CalendarFormat.week: 'Week'},
-        daysOfWeekStyle: DaysOfWeekStyle(
-          weekendStyle: TextStyle(
-            color: Color.fromARGB(255, 20, 150, 255)
-          ),
-          weekdayStyle: TextStyle(
-              color: Colors.white
-          )
-        ),
-        calendarStyle: CalendarStyle(
-            weekdayStyle: TextStyle(
-                color: Colors.white,
-            ),
-            weekendStyle: TextStyle(
-                color: Color.fromARGB(255, 20, 150, 255)
-            ),
-            selectedColor: Color.fromARGB(255, 200, 50, 50)
-        ),
-        onDaySelected: (date, map) {
-          BlocProvider.of<CalendarBloc>(context).add(UpdateDate(date));
-        }
-      ),
+      child: BlocBuilder<CalendarBloc, DateTime>(
+        builder: (context, date) {
+          return TableCalendar(
+              locale: 'es_ES',
+              calendarController: _calendarController,
+              initialCalendarFormat: CalendarFormat.week,
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              availableCalendarFormats: {CalendarFormat.week: 'Week'},
+              daysOfWeekStyle: DaysOfWeekStyle(
+                  weekendStyle: TextStyle(
+                      color: Color.fromARGB(255, 20, 150, 255)
+                  ),
+                  weekdayStyle: TextStyle(
+                      color: Colors.white
+                  )
+              ),
+              calendarStyle: CalendarStyle(
+                  weekdayStyle: TextStyle(
+                    color: Colors.white,
+                  ),
+                  weekendStyle: TextStyle(
+                      color: Color.fromARGB(255, 20, 150, 255)
+                  ),
+                  selectedColor: Color.fromARGB(255, 200, 50, 50)
+              ),
+              initialSelectedDay: date,
+              onDaySelected: (date, map) {
+                BlocProvider.of<CalendarBloc>(context).add(UpdateDate(date));
+              }
+          );
+        },
+      )
     );
   }
 
