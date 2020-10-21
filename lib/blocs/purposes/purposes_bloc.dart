@@ -1,18 +1,32 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:purpose_blocs/blocs/calendar/calendar_barrel.dart';
 import 'package:purpose_blocs/models/purpose_dao.dart';
 import 'purposes_barrel.dart';
 import 'package:purpose_blocs/models/purpose.dart';
 
 class PurposesBloc extends Bloc<PurposesEvent, PurposesState> {
   PurposeDao _purposeDao = PurposeDao();
+  final CalendarBloc calendarBloc;
+  StreamSubscription calendarSubscription;
 
-  PurposesBloc() : super(PurposesLoadInProgress());
+  DateTime currentDate;
+
+  PurposesBloc({@required this.calendarBloc})
+      : super(PurposesLoadInProgress()) {
+    currentDate = calendarBloc.state;
+
+    calendarSubscription = calendarBloc.listen((state) {
+      currentDate = state;
+      add(PurposesLoad());
+    });
+  }
 
   @override
   Stream<PurposesState> mapEventToState(PurposesEvent event) async* {
     if (event is PurposesLoad) {
-      yield* _mapPurposesLoadToState();
+      yield* _mapPurposesLoadToState(event);
     } else if (event is AddPurpose) {
       yield* _mapPurposeAddedToState(event);
     } else if (event is UpdatePurpose) {
@@ -24,7 +38,7 @@ class PurposesBloc extends Bloc<PurposesEvent, PurposesState> {
     }
   }
 
-  Stream<PurposesState> _mapPurposesLoadToState() async* {
+  Stream<PurposesState> _mapPurposesLoadToState(PurposesLoad event) async* {
     try {
       yield* _reloadPurposes();
     } catch (_) {
@@ -53,10 +67,16 @@ class PurposesBloc extends Bloc<PurposesEvent, PurposesState> {
     yield PurposesLoadSuccess(purposes);
   }
 
-  Stream<PurposesState> _reloadPurposes() async* {
-    //final List<Purpose > purposes = await _purposeDao.getAll();
-    int weekDay = DateTime.now().weekday;
-    final List<Purpose > purposes = await _purposeDao.getForSelectedDay(weekDay);
+  Stream<PurposesState> _reloadPurposes({bool all = false}) async* {
+    List<Purpose > purposes;
+    if (all) purposes = await _purposeDao.getAll();
+    else purposes = await _purposeDao.getForSelectedDay(this.currentDate.weekday);
     yield PurposesLoadSuccess(purposes);
+  }
+
+  @override
+  Future<void> close() {
+    calendarSubscription.cancel();
+    return super.close();
   }
 }

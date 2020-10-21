@@ -9,6 +9,79 @@ import 'package:purpose_blocs/widgets/purpose_elements/purpose_widget_all_or_not
 import 'dart:math';
 
 class BlocksPage extends StatelessWidget {
+  /*@override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PurposesBloc, PurposesState>(builder: (context, state) {
+      if (state is PurposesLoadSuccess) {
+        List<Purpose> purposes = state.purposes;
+        return Scaffold(
+          body: SafeArea(
+            child: Column(
+              children: [
+                CalendarWrapper(),
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    children: List.generate(purposes.length, (index) {
+                      return Container(
+                        margin: EdgeInsets.only(top: 10, bottom: 10, left: index % 2 == 0 ? 20 : 10, right: index % 2 == 0 ? 10 : 20),
+                        child: OpenContainer(
+                            closedBuilder: (_, openContainer) {
+                              return InkWell(
+                                child: PurposeWidgetAllOrNothing(purpose: purposes[index],),
+                                onTap: openContainer,
+                              );
+                            },
+                            closedElevation: 0,
+                            closedColor: Color.fromARGB(150, 200, 50, 50),
+                            closedShape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            transitionDuration: Duration(milliseconds: 400),
+                            openBuilder: (context, closeContainer) {
+                              PurposesBloc purposesBloc =
+                              BlocProvider.of<PurposesBloc>(context);
+                              return Container(
+                                  color: Colors.blueAccent,
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height,
+                                  child: CustomInList(
+                                    itemsPerRow: 7,
+                                    blockColor: Color.fromARGB(255, 255, 102, 102),
+                                    purposesBloc: purposesBloc,
+                                    id: purposes[index].id,
+                                  )
+                              );
+                            }),
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Color.fromARGB(255, 200, 50, 50),
+            child: Icon(Icons.add, color: Colors.white,),
+            onPressed: () => _showModalBottomSheet(context),
+          ),
+        );
+      } else if (state is PurposesLoadFailure) {
+        return Scaffold(
+          body: Center(
+            child: Text('Error al cargar propósitos'),
+          ),
+        );
+      } else {
+        return Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 200, 50, 50)),),
+          ),
+        );
+      }
+    });
+  }*/
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PurposesBloc, PurposesState>(builder: (context, state) {
@@ -81,6 +154,23 @@ class BlocksPage extends StatelessWidget {
       }
     });
   }
+
+
+  /*PageTransitionSwitcher(
+                  transitionBuilder: (
+                      Widget child,
+                      Animation<double> primaryAnimation,
+                      Animation<double> secondaryAnimation,
+                      ) {
+                    return FadeThroughTransition(
+                        child: child,
+                        animation: primaryAnimation,
+                        secondaryAnimation: secondaryAnimation
+                    );
+                },
+                  child: ,
+                )*/
+
 
   void _showModalBottomSheet(context) {
     showModalBottomSheet(

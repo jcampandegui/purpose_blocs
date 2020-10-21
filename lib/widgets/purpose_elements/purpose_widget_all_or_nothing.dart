@@ -44,14 +44,17 @@ class PurposeWidgetAllOrNothing extends StatelessWidget {
                 color: Color.fromARGB(255, 200, 50, 50),
                 borderRadius: BorderRadius.circular(100)),
             margin: EdgeInsets.only(left: 10, bottom: 10),
-            child: IconButton(
+            child: purpose.isCompletedForDate(DateTime.now()) ? IconButton(
+                icon: Icon(Icons.check),
+                onPressed: () {
+                  BlocProvider.of<PurposesBloc>(context).add(
+                      UpdatePurpose(purpose.removeStreak(DateTime.now())));
+                }
+            ) : IconButton(
                 icon: Icon(Icons.widgets),
                 onPressed: () {
-                  Map<String, bool> updatedStreak = purpose.streak;
-                  updatedStreak['${DateTime.now().millisecondsSinceEpoch.toString()}'] = true;
                   BlocProvider.of<PurposesBloc>(context).add(
-                    UpdatePurpose(
-                        purpose.copyWith(streak: updatedStreak)));
+                      UpdatePurpose(purpose.addStreak(DateTime.now())));
                 }
             )
           )

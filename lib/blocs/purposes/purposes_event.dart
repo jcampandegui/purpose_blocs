@@ -8,7 +8,17 @@ abstract class PurposesEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class PurposesLoad extends PurposesEvent {}
+class PurposesLoad extends PurposesEvent {
+  final DateTime date;
+
+  const PurposesLoad({this.date});
+
+  @override
+  List<Object> get props => [date];
+
+  @override
+  String toString() => 'PurposesLoad { date: $date }';
+}
 
 class AddPurpose extends PurposesEvent {
   final Purpose purpose;

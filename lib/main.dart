@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:purpose_blocs/blocs/calendar/calendar_barrel.dart';
 import 'package:purpose_blocs/blocs/navigation/navigation_barrel.dart';
 import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:purpose_blocs/pages/current_page.dart';
@@ -10,10 +11,17 @@ import 'package:purpose_blocs/widgets/basic_bottom_nav.dart';
 void main() {
     initializeDateFormatting('es_ES', null).then((_) {
       runApp(
-          BlocProvider(
-            create: (context) {
-              return PurposesBloc()..add(PurposesLoad());
-            },
+          MultiBlocProvider(
+            providers: [
+              BlocProvider<CalendarBloc>(
+                create: (context) => CalendarBloc(),
+              ),
+              BlocProvider<PurposesBloc>(
+                  create: (context) => PurposesBloc(
+                      calendarBloc: BlocProvider.of<CalendarBloc>(context)
+                  )..add(PurposesLoad())
+              )
+            ],
             child: MyApp(),
           )
       );
