@@ -57,6 +57,7 @@ class ClosedCreationButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10)
         ),
         transitionDuration: Duration(milliseconds: 400),
+        openColor: Theme.of(context).scaffoldBackgroundColor,
         openBuilder: (context, closeContainer) {
           if(openedWidget == 'allOrNothing') return AllOrNothingCreation(closeContainerCallback: closeContainer,);
           return null;

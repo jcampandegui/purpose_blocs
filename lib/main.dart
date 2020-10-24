@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark
       ),
       darkTheme: ThemeData(
-        scaffoldBackgroundColor: Colors.black54,
+        scaffoldBackgroundColor: Color.fromARGB(255, 10, 10, 10),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: Color.fromARGB(255, 255, 50, 50),
           selectedItemColor: Color.fromARGB(255, 200, 50, 50),

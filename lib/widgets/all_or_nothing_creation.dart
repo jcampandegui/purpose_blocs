@@ -36,11 +36,10 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
 
   @override
   Widget build(BuildContext context) {
-    print(purposeName);
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
           appBar: AppBar(
             backgroundColor: Color.fromARGB(0, 0, 0, 0),
+            elevation: 0,
           ),
           body: Container(
               margin: EdgeInsets.all(20),
@@ -51,15 +50,17 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
+                      margin: EdgeInsets.only(top: 20, bottom: 10),
+                      child: Text('Nombre'),
+                    ),
+                    Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(7),
-                        color: Color.fromARGB(100, 200, 50, 50)
+                        color: Color.fromARGB(255, 30, 30, 30)
                       ),
                       child: TextFormField(
+                        cursorColor: Colors.white,
                         controller: purposeName,
-                        decoration: InputDecoration(
-                          labelText: 'Nombre',
-                        ),
                         validator: (value) {
                           if(value.isEmpty) return '¡No dejes el nombre vacío!';
                           return null;
@@ -67,7 +68,7 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 20),
+                      margin: EdgeInsets.only(top: 20, bottom: 10),
                       child: Text('Periodo'),
                     ),
                     Container(
@@ -76,32 +77,38 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
                         children: _buildWeekdays(context)
                       ),
                     ),
-                    RaisedButton(
-                        child: Text('Crear'),
-                        onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            Purpose p = new Purpose(
-                                purposeName.text,
-                                repeatDays: {
-                                  '1': _selectedDays['L'],
-                                  '2': _selectedDays['M'],
-                                  '3': _selectedDays['X'],
-                                  '4': _selectedDays['J'],
-                                  '5': _selectedDays['V'],
-                                  '6': _selectedDays['S'],
-                                  '7': _selectedDays['D']
-                                }
-                            );
-                            BlocProvider.of<PurposesBloc>(context).add(AddPurpose(p));
-                            widget.closeContainerCallback();
-                          }
-                        }
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 20),
+                        child: RaisedButton(
+                          color: Color.fromARGB(255, 200, 50, 50),
+                            child: Text('Crear',style: TextStyle(color: Colors.white),),
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                Purpose p = new Purpose(
+                                    purposeName.text,
+                                    repeatDays: {
+                                      '1': _selectedDays['L'],
+                                      '2': _selectedDays['M'],
+                                      '3': _selectedDays['X'],
+                                      '4': _selectedDays['J'],
+                                      '5': _selectedDays['V'],
+                                      '6': _selectedDays['S'],
+                                      '7': _selectedDays['D']
+                                    }
+                                );
+                                BlocProvider.of<PurposesBloc>(context).add(AddPurpose(p));
+                                widget.closeContainerCallback();
+                              }
+                            }
+                        ),
+                      )
                     )
                   ],
                 ),
               )
           ),
-        )
     );
   }
 
@@ -109,17 +116,27 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
     List<Widget> weekdays = [];
     List<String> weekdayLabels = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
     double width = MediaQuery.of(context).size.width;
+    double padding = 10;
+    double toSeparate = width - padding*2*7;
+
     for(String label in weekdayLabels) {
       weekdays.add(InkWell(
         borderRadius: BorderRadius.circular(7),
         onTap: () => _selectDay(label),
         child: Container(
-          padding: EdgeInsets.only(right: width/10, top: 5, bottom: 5),
+          padding: EdgeInsets.all(padding),
+          margin: EdgeInsets.only(
+              left: label == 'L' ? 0 : (toSeparate / 6 / 4),
+              right: label == 'D' ? 0 : (toSeparate / 6 / 4)
+          ),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(7),
-              color: _selectedDays[label] ? Color.fromARGB(100, 200, 50, 50) : Color.fromARGB(100, 200, 200, 200)
+              color: _selectedDays[label] ? Color.fromARGB(255, 200, 50, 50) : Color.fromARGB(255, 30, 30, 30)
           ),
-          child: Text(label),
+          child: Align(
+            alignment: Alignment.center,
+            child: Text(label),
+          )
         ),
       ));
     }

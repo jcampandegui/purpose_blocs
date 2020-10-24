@@ -62,8 +62,17 @@ class Purpose extends Equatable {
     return this.creationDate >= toMillis;
   }
 
+  bool canBeEdited(DateTime date) {
+    String requestDate = _dateToStreakKey(date);
+    String today = _dateToStreakKey(DateTime.now());
+    return requestDate == today;
+  }
+
   bool isCompletedForDate(DateTime date) {
     String converted = _dateToStreakKey(date);
+    print(converted);
+    print(this.streak);
+    print(this.streak[converted]);
     return this.streak[converted] != null && this.streak[converted];
   }
 
