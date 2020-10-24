@@ -67,7 +67,7 @@ class BlocksPage extends StatelessWidget {
                       title: 'Actividad todo o nada',
                       description: 'Actividades que se completan un sóla vez',
                       icon: Icons.calendar_today,
-                      openedWidget: AllOrNothingCreation(),
+                      openedWidget: 'allOrNothing',
                     )
                 ),
                 Container(

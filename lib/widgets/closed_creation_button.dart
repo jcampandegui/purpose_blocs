@@ -1,11 +1,12 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:purpose_blocs/widgets/all_or_nothing_creation.dart';
 
 class ClosedCreationButton extends StatelessWidget {
   final String title;
   final String description;
   final IconData icon;
-  final Widget openedWidget;
+  final String openedWidget;
 
   const ClosedCreationButton({
     Key key,
@@ -57,7 +58,8 @@ class ClosedCreationButton extends StatelessWidget {
         ),
         transitionDuration: Duration(milliseconds: 400),
         openBuilder: (context, closeContainer) {
-          return openedWidget;
+          if(openedWidget == 'allOrNothing') return AllOrNothingCreation(closeContainerCallback: closeContainer,);
+          return null;
         });
   }
 }
