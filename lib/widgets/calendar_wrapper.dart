@@ -44,13 +44,24 @@ class _CalendarWrapperState extends State<CalendarWrapper> {
                   )
               ),
               calendarStyle: CalendarStyle(
-                  weekdayStyle: TextStyle(
-                    color: Colors.white,
-                  ),
-                  weekendStyle: TextStyle(
-                      color: Color.fromARGB(255, 20, 150, 255)
-                  ),
-                  selectedColor: Color.fromARGB(255, 200, 50, 50)
+                weekdayStyle: TextStyle(
+                  color: Colors.white,
+                ),
+                outsideStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                weekendStyle: TextStyle(
+                    color: Color.fromARGB(255, 20, 150, 255)
+                ),
+                outsideWeekendStyle: TextStyle(
+                  color: Color.fromARGB(200, 20, 150, 255),
+                ),
+                selectedColor: Color.fromARGB(255, 200, 50, 50),
+              ),
+              headerStyle: HeaderStyle(
+                centerHeaderTitle: true,
+                leftChevronIcon: Icon(Icons.chevron_left),
+                rightChevronIcon: Icon(Icons.chevron_right),
               ),
               initialSelectedDay: date,
               onDaySelected: (date, map) {

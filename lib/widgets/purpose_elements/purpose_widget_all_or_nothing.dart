@@ -32,6 +32,10 @@ class PurposeWidgetAllOrNothing extends StatelessWidget {
                       margin: EdgeInsets.only(left: 10),
                       child: PopupMenuButton(
                           onSelected: (option) => _manageMenuClick(option, context),
+                          color: Color.fromARGB(255, 30, 30, 30),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)
+                          ),
                           itemBuilder: (context) => [
                             PopupMenuItem(
                                 value: menuOptions.delete,

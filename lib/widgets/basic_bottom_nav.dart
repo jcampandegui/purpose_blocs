@@ -18,7 +18,7 @@ class BasicBottomNav extends StatelessWidget {
           return BottomNavigationBar(
             backgroundColor: Color.fromARGB(255, 20, 20, 20),
             items: [
-              BottomNavigationBarItem(icon: Icon(Icons.widgets), label: 'Propóstios', backgroundColor: Color.fromARGB(255, 20, 20, 20),),
+              BottomNavigationBarItem(icon: Icon(Icons.widgets), label: 'Propóstios', backgroundColor: Color.fromARGB(255, 30, 30, 30),),
               BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: 'Nav 2'),
               BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: 'Nav 3'),
               BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: 'Nav 4'),

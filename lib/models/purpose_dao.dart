@@ -48,8 +48,9 @@ class PurposeDao {
   }
 
   Future<List<Purpose>> getForSelectedDay(DateTime date) async {
+    var laterDate = new DateTime(date.year, date.month, date.day, 23, 59, 59);
     final finder = Finder(filter: Filter.and([
-      Filter.lessThanOrEquals('creationDate', date.millisecondsSinceEpoch),
+      Filter.lessThanOrEquals('creationDate', laterDate.millisecondsSinceEpoch),
         Filter.equals('repeatDays.${date.weekday}', true)
     ]));
     final snapshots = await _purposeStore.find(await _db, finder: finder);

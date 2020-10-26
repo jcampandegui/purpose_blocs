@@ -51,20 +51,32 @@ class _CustomInListState extends State<CustomInList> {
             int streak = purpose.getStreakNumber();
             rows = streak ~/ widget.itemsPerRow;
             rest = streak % widget.itemsPerRow;
-            return Container(
-              child: Scaffold(
-                appBar: AppBar(
-                  title: Center(
-                    child: Text(purpose.name),
-                  ),
-                  backgroundColor: Colors.black54,
-                ),
-                backgroundColor: Colors.black87,
-                body: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(purpose.name),
+                centerTitle: true,
+                actions: [
+                  IconButton(
+                      icon: Icon(Icons.more_vert),
+                      onPressed: () => null
+                  )
+                ],
+                backgroundColor: Color.fromARGB(0, 0, 0, 0),
+                elevation: 0,
+                //backgroundColor: Colors.black54,
+              ),
+              body:
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Stack(
                   children: [
-                    Flexible(
+                    Positioned.fill(
+                        bottom: 0,
                         child: Container(
+                          constraints: BoxConstraints.tightFor(
+                            height: MediaQuery.of(context).size.height * 0.55,
+                          ),
                           margin: EdgeInsets.all(listPadding),
                           child: ListView.builder(
                               itemCount: rows + 1, // If no rest, add a new row to add newxt block
@@ -84,22 +96,121 @@ class _CustomInListState extends State<CustomInList> {
                                 );
                               }),
                         )
-                    )
+                    ),
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Color.fromARGB(255, 0, 0, 0),
+                                  Color.fromARGB(0, 0, 0, 0),
+                                ],
+                                stops: [0.5, 1]
+                            )
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-                floatingActionButton: FloatingActionButton(
-                  child: Icon(Icons.add),
-                  onPressed: () => {
-                    _sController.animateTo(
-                        _sController.position.maxScrollExtent,
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.decelerate
-                    ).then((value) => fController.animationTrigger())
-                  },
-                  backgroundColor: Color.fromARGB(255, 102, 168, 255),
-                ),
-                floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
               ),
+              /*Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                      child: Container(
+                        margin: EdgeInsets.all(listPadding),
+                        child: ListView.builder(
+                            itemCount: rows + 1, // If no rest, add a new row to add newxt block
+                            reverse: true,
+                            controller: _sController,
+                            itemBuilder: (context, index) {
+                              double margin = 5;
+                              double blockWidth = (MediaQuery.of(context).size.width - listPadding * 2 - margin * widget.itemsPerRow) / widget.itemsPerRow;
+                              double blockHeight = (MediaQuery.of(context).size.width - listPadding * 2 - margin * widget.itemsPerRow) / widget.itemsPerRow;
+                              List<Widget> children = _buildRowChildren(purpose, streak, index == rows, blockWidth, blockHeight, margin);
+                              return Container(
+                                padding: EdgeInsets.only(top: index == rows ? listPadding * 3 : 0),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: children
+                                ),
+                              );
+                            }),
+                      )
+                  )
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          bottom: 0,
+                            child: Container(
+                              margin: EdgeInsets.all(listPadding),
+                              child: ListView.builder(
+                                  itemCount: rows + 1, // If no rest, add a new row to add newxt block
+                                  reverse: true,
+                                  controller: _sController,
+                                  itemBuilder: (context, index) {
+                                    double margin = 5;
+                                    double blockWidth = (MediaQuery.of(context).size.width - listPadding * 2 - margin * widget.itemsPerRow) / widget.itemsPerRow;
+                                    double blockHeight = (MediaQuery.of(context).size.width - listPadding * 2 - margin * widget.itemsPerRow) / widget.itemsPerRow;
+                                    List<Widget> children = _buildRowChildren(purpose, streak, index == rows, blockWidth, blockHeight, margin);
+                                    return Container(
+                                      padding: EdgeInsets.only(top: index == rows ? listPadding * 3 : 0),
+                                      child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: children
+                                      ),
+                                    );
+                                  }),
+                            )
+                        ),
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          child: Container(
+                            height: 500,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Color.fromARGB(255, 0, 0, 0),
+                                      Color.fromARGB(0, 0, 0, 0),
+                                    ],
+                                  stops: [0.5, 1]
+                                )
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),*/
+              floatingActionButton: FloatingActionButton(
+                child: Icon(
+                    Icons.add,
+                  color: Colors.white,
+                ),
+                onPressed: () => {
+                  _sController.animateTo(
+                      _sController.position.maxScrollExtent,
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.decelerate
+                  ).then((value) => fController.animationTrigger())
+                },
+                backgroundColor: Color.fromARGB(255, 200, 50, 50),
+              ),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
             );
         } else {
             return null;

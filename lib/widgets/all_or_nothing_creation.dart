@@ -41,74 +41,97 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
             backgroundColor: Color.fromARGB(0, 0, 0, 0),
             elevation: 0,
           ),
-          body: Container(
-              margin: EdgeInsets.all(20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 20, bottom: 10),
-                      child: Text('Nombre'),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        color: Color.fromARGB(255, 30, 30, 30)
-                      ),
-                      child: TextFormField(
-                        cursorColor: Colors.white,
-                        controller: purposeName,
-                        validator: (value) {
-                          if(value.isEmpty) return '¡No dejes el nombre vacío!';
-                          return null;
-                        },
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 20, bottom: 10),
-                      child: Text('Periodo'),
-                    ),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: _buildWeekdays(context)
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        margin: EdgeInsets.only(top: 20),
-                        child: RaisedButton(
-                          color: Color.fromARGB(255, 200, 50, 50),
-                            child: Text('Crear',style: TextStyle(color: Colors.white),),
-                            onPressed: () {
-                              if (_formKey.currentState.validate()) {
-                                Purpose p = new Purpose(
-                                    purposeName.text,
-                                    repeatDays: {
-                                      '1': _selectedDays['L'],
-                                      '2': _selectedDays['M'],
-                                      '3': _selectedDays['X'],
-                                      '4': _selectedDays['J'],
-                                      '5': _selectedDays['V'],
-                                      '6': _selectedDays['S'],
-                                      '7': _selectedDays['D']
-                                    }
-                                );
-                                BlocProvider.of<PurposesBloc>(context).add(AddPurpose(p));
-                                widget.closeContainerCallback();
-                              }
-                            }
+          body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: Container(
+                margin: EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 20, bottom: 10),
+                          child: Text('Nombre'),
                         ),
-                      )
-                    )
-                  ],
-                ),
-              )
-          ),
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              color: Color.fromARGB(255, 30, 30, 30)
+                          ),
+                          child: TextFormField(
+                            cursorColor: Colors.white,
+                            controller: purposeName,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                border: InputBorder.none
+                            ),
+                            validator: (value) {
+                              if(value.isEmpty) return '¡No dejes el nombre vacío!';
+                              return null;
+                            },
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 30, bottom: 10),
+                          child: Text('Periodo'),
+                        ),
+                        Container(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: _buildWeekdays(context)
+                          ),
+                        ),
+                        /*Expanded(
+                            child: Container()
+                        ),*/
+                        Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              margin: EdgeInsets.only(top: 20),
+                              child: RaisedButton(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5)
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 100,
+                                  ),
+                                  color: Color.fromARGB(255, 200, 50, 50),
+                                  child: Text('Crear',style: TextStyle(color: Colors.white, fontSize: 16),),
+                                  onPressed: () {
+                                    if (_formKey.currentState.validate()) {
+                                      Purpose p = new Purpose(
+                                          purposeName.text,
+                                          repeatDays: {
+                                            '1': _selectedDays['L'],
+                                            '2': _selectedDays['M'],
+                                            '3': _selectedDays['X'],
+                                            '4': _selectedDays['J'],
+                                            '5': _selectedDays['V'],
+                                            '6': _selectedDays['S'],
+                                            '7': _selectedDays['D']
+                                          }
+                                      );
+                                      BlocProvider.of<PurposesBloc>(context).add(AddPurpose(p));
+                                      widget.closeContainerCallback();
+                                    }
+                                  }
+                              ),
+                            )
+                        )
+                      ],
+                    ),
+                  ),
+                )
+            ),
+          )
     );
   }
 
@@ -116,7 +139,7 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
     List<Widget> weekdays = [];
     List<String> weekdayLabels = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
     double width = MediaQuery.of(context).size.width;
-    double padding = 10;
+    double padding = 15;
     double toSeparate = width - padding*2*7;
 
     for(String label in weekdayLabels) {
@@ -126,8 +149,8 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
         child: Container(
           padding: EdgeInsets.all(padding),
           margin: EdgeInsets.only(
-              left: label == 'L' ? 0 : (toSeparate / 6 / 4),
-              right: label == 'D' ? 0 : (toSeparate / 6 / 4)
+              left: label == 'L' ? 0 : (toSeparate / 6 / 7),
+              right: label == 'D' ? 0 : (toSeparate / 6 / 7)
           ),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(7),
