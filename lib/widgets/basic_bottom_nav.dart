@@ -19,7 +19,7 @@ class BasicBottomNav extends StatelessWidget {
             backgroundColor: Color.fromARGB(255, 20, 20, 20),
             items: [
               BottomNavigationBarItem(icon: Icon(Icons.widgets), label: 'Propóstios', backgroundColor: Color.fromARGB(255, 30, 30, 30),),
-              BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: 'Nav 2'),
+              BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Ajustes'),
               BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: 'Nav 3'),
               BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: 'Nav 4'),
             ],
@@ -34,7 +34,7 @@ class BasicBottomNav extends StatelessWidget {
 
   int _appTabToIndex(AppTab appTab) {
     if(appTab == AppTab.Purposes) return 0;
-    else if(appTab == AppTab.Dummy1) return 1;
+    else if(appTab == AppTab.Settings) return 1;
     else if(appTab == AppTab.Dummy2) return 2;
     else if(appTab == AppTab.Dummy3) return 3;
     else return -1;
@@ -42,7 +42,7 @@ class BasicBottomNav extends StatelessWidget {
 
   AppTab _indexToAppTab(int index) {
     if(index == 0) return AppTab.Purposes;
-    else if(index == 1) return AppTab.Dummy1;
+    else if(index == 1) return AppTab.Settings;
     else if(index == 2) return AppTab.Dummy2;
     else if(index == 3) return AppTab.Dummy3;
     else return null;

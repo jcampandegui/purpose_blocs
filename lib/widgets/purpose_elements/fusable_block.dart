@@ -45,6 +45,8 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
   bool glowAnimationCompleted = false;
   String glowAnimationState = 'expand';
 
+  bool allAnimationFinished = false;
+
   @override
   void initState() {
     print('init fusable');
@@ -104,7 +106,7 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
         _swapGlowTween(glowAnimationState);
         _glowController.forward();
       } else if(glowAnimationCompleted && glowAnimationState == 'retract') {
-        //_resetAll();
+        allAnimationFinished = true;
         widget.onComplete();
       }
     });
@@ -273,8 +275,10 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
 
   @override
   void dispose() {
+    if(!allAnimationFinished) widget.onComplete();
     _transformController.dispose();
     _glowController.dispose();
+    _opacityController.dispose();
     super.dispose();
   }
 }

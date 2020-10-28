@@ -39,6 +39,9 @@ class _BreakableBlockState extends State<BreakableBlock>
   bool fused = false;
   bool breakAnimationCompleted = false;
 
+  bool animationStarted = false;
+  bool allAnimationFinished = false;
+
   @override
   void initState() {
     _opacityController = AnimationController(
@@ -55,7 +58,7 @@ class _BreakableBlockState extends State<BreakableBlock>
     );
     _transformAnimation = Tween(begin: 0.0, end: 50.0).animate(
         new CurvedAnimation(
-            parent: _transformController, curve: Curves.elasticIn));
+            parent: _opacityController, curve: Curves.easeOutCirc));
     _transformAnimation.addListener(_transformListener);
 
     super.initState();
@@ -64,6 +67,7 @@ class _BreakableBlockState extends State<BreakableBlock>
   void _opacityListener() {
     setState(() {
       if (_opacityAnimation.isCompleted) {
+        allAnimationFinished = true;
         widget.onComplete();
       }
     });
@@ -72,6 +76,7 @@ class _BreakableBlockState extends State<BreakableBlock>
   void _transformListener() {
     setState(() {
       breakAnimationCompleted = _transformAnimation.isCompleted;
+      print(_transformController.lastElapsedDuration);
       if (breakAnimationCompleted) {
         _opacityController.forward();
       }
@@ -85,7 +90,9 @@ class _BreakableBlockState extends State<BreakableBlock>
   }
 
   void triggerAnimation() {
-    _transformController.forward();
+    //_transformController.forward();
+    animationStarted = true;
+    _opacityController.forward();
   }
 
   void triggerReset() {
@@ -94,7 +101,7 @@ class _BreakableBlockState extends State<BreakableBlock>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return animationStarted ? Container(
       margin: widget.margins,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -175,11 +182,17 @@ class _BreakableBlockState extends State<BreakableBlock>
           )
         ],
       ),
+    ) : Container(
+      margin: widget.margins,
+      color: widget.color,
+      width: widget.width,
+      height: widget.height,
     );
   }
 
   @override
   void dispose() {
+    if(!allAnimationFinished) widget.onComplete();
     _transformController.dispose();
     _opacityController.dispose();
     super.dispose();

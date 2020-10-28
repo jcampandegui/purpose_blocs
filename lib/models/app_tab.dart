@@ -1,1 +1,1 @@
-enum AppTab { Purposes, Dummy1, Dummy2, Dummy3 }
+enum AppTab { Purposes, Settings, Dummy2, Dummy3 }

@@ -52,7 +52,7 @@ class _CustomInListState extends State<CustomInList> {
             int streak = purpose.getStreakNumber();
             rows = streak ~/ widget.itemsPerRow;
             rest = streak % widget.itemsPerRow;
-            bControllers = new List<FusableBlockController>.filled(rows * widget.itemsPerRow + rest, null, growable: true);
+            if(bControllers == null || bControllers.length != rows * widget.itemsPerRow + rest) bControllers = new List<FusableBlockController>.filled(rows * widget.itemsPerRow + rest, new FusableBlockController(), growable: true);
             return Scaffold(
               appBar: AppBar(
                 title: Text(purpose.name),
@@ -117,7 +117,6 @@ class _CustomInListState extends State<CustomInList> {
                       ),
                 onPressed: purpose.isCompletedForDate(DateTime.now())
                     ? () {
-                  print(bControllers);
                   bControllers[bControllers.length-1].animationTrigger();
                 }
                     : () => {
@@ -143,7 +142,6 @@ class _CustomInListState extends State<CustomInList> {
     List<Widget> children = [];
     int inLine = last ? rest : widget.itemsPerRow;
     for (int i = 0; i < inLine; i++) {
-      if(bControllers[i] == null) bControllers[i] = new FusableBlockController();
       BreakableBlock bb = BreakableBlock(
           width: width,
           height: height,
@@ -155,10 +153,6 @@ class _CustomInListState extends State<CustomInList> {
           onComplete: () => widget.purposesBloc.add(UpdatePurpose(purpose.removeStreak(DateTime.now())))
       );
       children.add(bb);
-      print('--------------');
-      print(bControllers[i].hashCode);
-      print(bb.controller.hashCode);
-      print('--------------');
     }
     if (last) {
       if (fController.resetTrigger != null) fController.resetTrigger();
