@@ -87,6 +87,8 @@ class _BreakableBlockState extends State<BreakableBlock>
     _opacityController.reset();
     _transformController.reset();
     breakAnimationCompleted = false;
+    animationStarted = false;
+    allAnimationFinished = false;
   }
 
   void triggerAnimation() {
@@ -192,7 +194,7 @@ class _BreakableBlockState extends State<BreakableBlock>
 
   @override
   void dispose() {
-    if(!allAnimationFinished) widget.onComplete();
+    if(!allAnimationFinished && animationStarted) widget.onComplete();
     _transformController.dispose();
     _opacityController.dispose();
     super.dispose();

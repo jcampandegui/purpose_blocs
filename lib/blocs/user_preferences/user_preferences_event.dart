@@ -8,6 +8,8 @@ abstract class UserPreferencesEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class LoadPreferences extends UserPreferencesEvent {}
+
 class UpdatePreferences extends UserPreferencesEvent {
   final UserPreferences preferences;
 

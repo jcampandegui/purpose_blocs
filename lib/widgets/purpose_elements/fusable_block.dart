@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:purpose_blocs/blocs/user_preferences/user_preferences_barrel.dart';
 import 'package:purpose_blocs/widgets/purpose_elements/fusable_block_controller.dart';
 import 'package:vibration/vibration.dart';
 
@@ -9,6 +11,7 @@ class FusableBlock extends StatefulWidget {
   final Color color;
   final FusableBlockController controller;
   final VoidCallback onComplete;
+  bool test = false;
 
   FusableBlock({
     Key key,
@@ -45,11 +48,12 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
   bool glowAnimationCompleted = false;
   String glowAnimationState = 'expand';
 
+  bool animationTriggered = false;
   bool allAnimationFinished = false;
+  bool vibrationPreference;
 
   @override
   void initState() {
-    print('init fusable');
     _opacityController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 300),
@@ -78,11 +82,14 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
             parent: _glowController, curve: Curves.easeOutExpo));
     _glowAnimation.addListener(_glowListener);
 
+    vibrationPreference = (BlocProvider.of<UserPreferencesBloc>(context).state as PreferencesLoaded).preferences.blockAddVibration;
+
     super.initState();
   }
 
   void _opacityListener() {
     setState(() {
+      animationTriggered = animationTriggered;
       if(_opacityAnimation.isCompleted) {
         _transformController.forward();
       }
@@ -91,9 +98,10 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
 
   void _transformListener() {
     setState(() {
+      animationTriggered = animationTriggered;
       fuseAnimationCompleted = _transformAnimation.isCompleted;
       if(fuseAnimationCompleted) {
-        Vibration.vibrate(duration: 200);
+        if(vibrationPreference) Vibration.vibrate(duration: 200);
         _glowController.forward();
       }
     });
@@ -101,6 +109,7 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
 
   void _glowListener() {
     setState(() {
+      animationTriggered = animationTriggered;
       glowAnimationCompleted = _glowAnimation.isCompleted;
       if(glowAnimationCompleted && glowAnimationState == 'expand') {
         _swapGlowTween(glowAnimationState);
@@ -133,9 +142,15 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
 
     glowAnimationCompleted = false;
     glowAnimationState = 'expand';
+
+    allAnimationFinished = false;
+    animationTriggered = false;
   }
 
   void triggerAnimation() {
+    animationTriggered = true;
+    widget.test = true;
+    print('animation triggered: $animationTriggered');
     _opacityController.forward();
   }
 
@@ -275,7 +290,12 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
 
   @override
   void dispose() {
-    if(!allAnimationFinished) widget.onComplete();
+    print('disposed when: animationTriggered: ${this.animationTriggered} and animationEnded: ${this.allAnimationFinished}');
+    print('test: ${widget.test}');
+    if(!this.allAnimationFinished && this.animationTriggered) {
+      print('complete block in dispose');
+      widget.onComplete();
+    }
     _transformController.dispose();
     _glowController.dispose();
     _opacityController.dispose();

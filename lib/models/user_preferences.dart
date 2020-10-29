@@ -4,17 +4,18 @@ class UserPreferences extends Equatable {
   final int id;
   final bool blockAddVibration;
 
-  UserPreferences(this.id, this.blockAddVibration);
+  UserPreferences(this.blockAddVibration, {int id}) :
+        this.id = id ?? null;
 
-  UserPreferences copyWith({String id, bool blockAddVibration}) {
+  UserPreferences copyWith({bool blockAddVibration, String id}) {
     return UserPreferences(
-      id ?? this.id,
-      blockAddVibration ?? this.blockAddVibration
+      blockAddVibration ?? this.blockAddVibration,
+      id: id ?? this.id
     );
   }
 
   @override
-  List<Object> get props => [id, blockAddVibration];
+  List<Object> get props => [blockAddVibration, id];
 
   @override
   String toString() {
@@ -30,8 +31,8 @@ class UserPreferences extends Equatable {
 
   factory UserPreferences.fromMap(int id, Map<String, dynamic> map) {
     return UserPreferences(
-        id,
-        map['blockAddVibration']
+      map['blockAddVibration'],
+      id: id,
     );
   }
 

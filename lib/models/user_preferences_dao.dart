@@ -33,6 +33,7 @@ class UserPreferencesDao {
 
   Future<UserPreferences> getPreferences() async {
     final snapshots = await _userPreferencesStore.find(await _db);
-    return UserPreferences.fromMap(snapshots[0].key, snapshots[0].value);
+    if(snapshots.length > 0) return UserPreferences.fromMap(snapshots[0].key, snapshots[0].value);
+    return null;
   }
 }

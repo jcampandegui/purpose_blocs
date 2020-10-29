@@ -4,6 +4,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:purpose_blocs/blocs/calendar/calendar_barrel.dart';
 import 'package:purpose_blocs/blocs/navigation/navigation_barrel.dart';
 import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
+import 'package:purpose_blocs/blocs/user_preferences/user_preferences_barrel.dart';
 import 'package:purpose_blocs/pages/current_page.dart';
 import 'package:purpose_blocs/widgets/basic_bottom_nav.dart';
 
@@ -13,6 +14,10 @@ void main() {
       runApp(
           MultiBlocProvider(
             providers: [
+              BlocProvider<UserPreferencesBloc>(
+                create: (context) => UserPreferencesBloc()
+                  ..add(LoadPreferences()),
+              ),
               BlocProvider<CalendarBloc>(
                 create: (context) => CalendarBloc(),
               ),
@@ -80,10 +85,14 @@ class MyApp extends StatelessWidget {
             create: (context) => NavigationBloc(),
           ),
         ],
-        child: Scaffold(
-          body:  CurrentPage(),
-          bottomNavigationBar: BasicBottomNav(),
-        ),
+        child: BlocBuilder<UserPreferencesBloc, UserPreferencesState>(
+          builder: (context, state) {
+            return Scaffold(
+              body:  CurrentPage(),
+              bottomNavigationBar: BasicBottomNav(),
+            );
+          },
+        )
       ),
     );
   }
