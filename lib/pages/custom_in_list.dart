@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:purpose_blocs/models/purpose.dart';
@@ -7,6 +8,18 @@ import 'package:purpose_blocs/widgets/all_or_nothing_edit.dart';
 import 'package:purpose_blocs/widgets/purpose_elements/breakable_block.dart';
 import 'package:purpose_blocs/widgets/purpose_elements/fusable_block.dart';
 import 'package:purpose_blocs/widgets/purpose_elements/fusable_block_controller.dart';
+
+enum UpdateType {add, remove}
+enum PurposeUpdateState {stop, start, end}
+
+class StateControl {
+  PurposeUpdateState state;
+  Function method;
+
+  StateControl({PurposeUpdateState state, Function method}) :
+        this.state = state ?? PurposeUpdateState.stop,
+        this.method = method ?? null;
+}
 
 class CustomInList extends StatefulWidget {
   final int itemsPerRow;
@@ -30,6 +43,8 @@ class _CustomInListState extends State<CustomInList> {
   FusableBlockController fController;
   List<FusableBlockController> bControllers;
   ScrollController _sController;
+
+  StateControl stateControl = new StateControl();
 
   @override
   void initState() {
@@ -115,16 +130,22 @@ class _CustomInListState extends State<CustomInList> {
                         Icons.add,
                         color: Colors.white,
                       ),
-                onPressed: purpose.isCompletedForDate(DateTime.now())
-                    ? () {
-                  bControllers[bControllers.length-1].animationTrigger();
-                }
-                    : () => {
+                onPressed: () => {
                           _sController
                               .animateTo(_sController.position.maxScrollExtent,
                                   duration: Duration(milliseconds: 300),
                                   curve: Curves.decelerate)
-                              .then((value) => fController.animationTrigger())
+                              .then((value) => {
+                                stateControl.state = PurposeUpdateState.start,
+                                if(purpose.isCompletedForDate(DateTime.now())) {
+                                  bControllers[bControllers.length-1].animationTrigger(),
+                                  stateControl.method = () => widget.purposesBloc.add(UpdatePurpose(purpose.removeStreak(DateTime.now()))),
+                                }
+                                else {
+                                  fController.animationTrigger(),
+                                  stateControl.method = () => widget.purposesBloc.add(UpdatePurpose(purpose.addStreak(DateTime.now()))),
+                                }
+                              })
                         },
                 backgroundColor: Color.fromARGB(255, 200, 50, 50),
               ),
@@ -150,7 +171,7 @@ class _CustomInListState extends State<CustomInList> {
               bottom: margin),
           color: widget.blockColor,
           controller: bControllers[i],
-          onComplete: () => widget.purposesBloc.add(UpdatePurpose(purpose.removeStreak(DateTime.now())))
+          onComplete: () => securePurposeUpdate(UpdateType.remove, purpose)//widget.purposesBloc.add(UpdatePurpose(purpose.removeStreak(DateTime.now())))
       );
       children.add(bb);
     }
@@ -164,14 +185,24 @@ class _CustomInListState extends State<CustomInList> {
             bottom: margin),
         color: widget.blockColor,
         controller: fController,
-        onComplete: () => widget.purposesBloc.add(UpdatePurpose(purpose.addStreak(DateTime.now())))
+        onComplete: () => securePurposeUpdate(UpdateType.add, purpose)//widget.purposesBloc.add(UpdatePurpose(purpose.addStreak(DateTime.now())))
       ));
     }
     return children;
   }
 
+  void securePurposeUpdate(UpdateType type, Purpose purpose) {
+    if(type == UpdateType.add) {
+      widget.purposesBloc.add(UpdatePurpose(purpose.addStreak(DateTime.now())));
+    } else if(type == UpdateType.remove) {
+      widget.purposesBloc.add(UpdatePurpose(purpose.removeStreak(DateTime.now())));
+    }
+    stateControl.state = PurposeUpdateState.end;
+  }
+
   @override
   void dispose() {
+    if(stateControl.state == PurposeUpdateState.start) stateControl.method();
     _sController.dispose();
     super.dispose();
   }

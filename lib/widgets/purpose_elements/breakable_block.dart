@@ -76,7 +76,6 @@ class _BreakableBlockState extends State<BreakableBlock>
   void _transformListener() {
     setState(() {
       breakAnimationCompleted = _transformAnimation.isCompleted;
-      print(_transformController.lastElapsedDuration);
       if (breakAnimationCompleted) {
         _opacityController.forward();
       }

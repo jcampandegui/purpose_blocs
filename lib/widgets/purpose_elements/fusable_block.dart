@@ -48,8 +48,6 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
   bool glowAnimationCompleted = false;
   String glowAnimationState = 'expand';
 
-  bool animationTriggered = false;
-  bool allAnimationFinished = false;
   bool vibrationPreference;
 
   @override
@@ -89,7 +87,6 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
 
   void _opacityListener() {
     setState(() {
-      animationTriggered = animationTriggered;
       if(_opacityAnimation.isCompleted) {
         _transformController.forward();
       }
@@ -98,7 +95,6 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
 
   void _transformListener() {
     setState(() {
-      animationTriggered = animationTriggered;
       fuseAnimationCompleted = _transformAnimation.isCompleted;
       if(fuseAnimationCompleted) {
         if(vibrationPreference) Vibration.vibrate(duration: 200);
@@ -109,13 +105,11 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
 
   void _glowListener() {
     setState(() {
-      animationTriggered = animationTriggered;
       glowAnimationCompleted = _glowAnimation.isCompleted;
       if(glowAnimationCompleted && glowAnimationState == 'expand') {
         _swapGlowTween(glowAnimationState);
         _glowController.forward();
       } else if(glowAnimationCompleted && glowAnimationState == 'retract') {
-        allAnimationFinished = true;
         widget.onComplete();
       }
     });
@@ -142,15 +136,10 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
 
     glowAnimationCompleted = false;
     glowAnimationState = 'expand';
-
-    allAnimationFinished = false;
-    animationTriggered = false;
   }
 
   void triggerAnimation() {
-    animationTriggered = true;
     widget.test = true;
-    print('animation triggered: $animationTriggered');
     _opacityController.forward();
   }
 
@@ -290,12 +279,6 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
 
   @override
   void dispose() {
-    print('disposed when: animationTriggered: ${this.animationTriggered} and animationEnded: ${this.allAnimationFinished}');
-    print('test: ${widget.test}');
-    if(!this.allAnimationFinished && this.animationTriggered) {
-      print('complete block in dispose');
-      widget.onComplete();
-    }
     _transformController.dispose();
     _glowController.dispose();
     _opacityController.dispose();
