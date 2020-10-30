@@ -1,6 +1,7 @@
+import 'dart:math';
+
 import 'package:equatable/equatable.dart';
 
-// TODO: id should be set by db not here
 class Purpose extends Equatable {
   final int id;
   final String name;
@@ -75,6 +76,7 @@ class Purpose extends Equatable {
 
   String _dateToStreakKey(DateTime date) {
     return '${date.year}-${date.month}-${date.day}';
+    //return '${Random().nextInt(3000)}-${Random().nextInt(12)}-${Random().nextInt(31)}';
   }
 
   Purpose addStreak(DateTime date) {

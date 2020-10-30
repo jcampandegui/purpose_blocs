@@ -28,6 +28,7 @@ class _BreakableBlockState extends State<BreakableBlock>
     with TickerProviderStateMixin {
   _BreakableBlockState(FusableBlockController _controller) {
     _controller.animationTrigger = triggerAnimation;
+    _controller.animationTriggerSilent = triggerAnimationSilent;
     _controller.resetTrigger = triggerReset;
   }
 
@@ -41,6 +42,8 @@ class _BreakableBlockState extends State<BreakableBlock>
 
   bool animationStarted = false;
   bool allAnimationFinished = false;
+
+  bool doCallback = true;
 
   @override
   void initState() {
@@ -68,7 +71,7 @@ class _BreakableBlockState extends State<BreakableBlock>
     setState(() {
       if (_opacityAnimation.isCompleted) {
         allAnimationFinished = true;
-        widget.onComplete();
+        if(doCallback) widget.onComplete();
       }
     });
   }
@@ -91,7 +94,12 @@ class _BreakableBlockState extends State<BreakableBlock>
   }
 
   void triggerAnimation() {
-    //_transformController.forward();
+    animationStarted = true;
+    _opacityController.forward();
+  }
+
+  void triggerAnimationSilent() {
+    doCallback = false;
     animationStarted = true;
     _opacityController.forward();
   }

@@ -11,7 +11,6 @@ class FusableBlock extends StatefulWidget {
   final Color color;
   final FusableBlockController controller;
   final VoidCallback onComplete;
-  bool test = false;
 
   FusableBlock({
     Key key,
@@ -30,6 +29,7 @@ class FusableBlock extends StatefulWidget {
 class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMixin {
   _FusableBlockState(FusableBlockController _controller) {
     _controller.animationTrigger = triggerAnimation;
+    _controller.animationTriggerSilent = triggerAnimationSilent;
     _controller.resetTrigger = triggerReset;
   }
 
@@ -49,6 +49,7 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
   String glowAnimationState = 'expand';
 
   bool vibrationPreference;
+  bool doCallback = true;
 
   @override
   void initState() {
@@ -110,7 +111,7 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
         _swapGlowTween(glowAnimationState);
         _glowController.forward();
       } else if(glowAnimationCompleted && glowAnimationState == 'retract') {
-        widget.onComplete();
+        if(doCallback) widget.onComplete();
       }
     });
   }
@@ -139,13 +140,15 @@ class _FusableBlockState extends State<FusableBlock> with TickerProviderStateMix
   }
 
   void triggerAnimation() {
-    widget.test = true;
     _opacityController.forward();
   }
 
-  void triggerReset() {
-    _resetAll();
+  void triggerAnimationSilent() {
+    doCallback = false;
+    _opacityController.forward();
   }
+
+  void triggerReset() => _resetAll();
 
   @override
   Widget build(BuildContext context) {

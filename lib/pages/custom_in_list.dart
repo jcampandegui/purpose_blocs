@@ -1,6 +1,5 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:purpose_blocs/models/purpose.dart';
@@ -9,15 +8,15 @@ import 'package:purpose_blocs/widgets/purpose_elements/breakable_block.dart';
 import 'package:purpose_blocs/widgets/purpose_elements/fusable_block.dart';
 import 'package:purpose_blocs/widgets/purpose_elements/fusable_block_controller.dart';
 
-enum UpdateType {add, remove}
-enum PurposeUpdateState {stop, start, end}
+enum UpdateType { add, remove }
+enum PurposeUpdateState { stop, start, end }
 
 class StateControl {
   PurposeUpdateState state;
   Function method;
 
-  StateControl({PurposeUpdateState state, Function method}) :
-        this.state = state ?? PurposeUpdateState.stop,
+  StateControl({PurposeUpdateState state, Function method})
+      : this.state = state ?? PurposeUpdateState.stop,
         this.method = method ?? null;
 }
 
@@ -67,7 +66,7 @@ class _CustomInListState extends State<CustomInList> {
             int streak = purpose.getStreakNumber();
             rows = streak ~/ widget.itemsPerRow;
             rest = streak % widget.itemsPerRow;
-            if(bControllers == null || bControllers.length != rows * widget.itemsPerRow + rest) bControllers = new List<FusableBlockController>.filled(rows * widget.itemsPerRow + rest, new FusableBlockController(), growable: true);
+            _updateBreakableControllers();
             return Scaffold(
               appBar: AppBar(
                 title: Text(purpose.name),
@@ -76,7 +75,8 @@ class _CustomInListState extends State<CustomInList> {
                   OpenContainer(
                       closedBuilder: (_, openContainer) {
                         return IconButton(
-                            icon: Icon(Icons.more_vert), onPressed: openContainer);
+                            icon: Icon(Icons.more_vert),
+                            onPressed: openContainer);
                       },
                       closedColor: Color.fromARGB(0, 0, 0, 0),
                       openBuilder: (_, closeContainer) {
@@ -85,7 +85,10 @@ class _CustomInListState extends State<CustomInList> {
                           purposesBloc: widget.purposesBloc,
                           purpose: purpose,
                         );
-                      }
+                      }),
+                  IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () => _breakStreak()
                   )
                 ],
                 backgroundColor: Color.fromARGB(0, 0, 0, 0),
@@ -109,7 +112,7 @@ class _CustomInListState extends State<CustomInList> {
                               listPadding * 2 -
                               margin * widget.itemsPerRow) /
                           widget.itemsPerRow;
-                      List<Widget> children = _buildRowChildren(purpose, streak,
+                      List<Widget> children = _buildRowChildren(purpose, index, streak,
                           index == rows, blockWidth, blockHeight, margin);
                       return Container(
                         padding: EdgeInsets.only(
@@ -131,22 +134,29 @@ class _CustomInListState extends State<CustomInList> {
                         color: Colors.white,
                       ),
                 onPressed: () => {
-                          _sController
-                              .animateTo(_sController.position.maxScrollExtent,
-                                  duration: Duration(milliseconds: 300),
-                                  curve: Curves.decelerate)
-                              .then((value) => {
-                                stateControl.state = PurposeUpdateState.start,
-                                if(purpose.isCompletedForDate(DateTime.now())) {
-                                  bControllers[bControllers.length-1].animationTrigger(),
-                                  stateControl.method = () => widget.purposesBloc.add(UpdatePurpose(purpose.removeStreak(DateTime.now()))),
-                                }
-                                else {
-                                  fController.animationTrigger(),
-                                  stateControl.method = () => widget.purposesBloc.add(UpdatePurpose(purpose.addStreak(DateTime.now()))),
-                                }
-                              })
-                        },
+                  _sController
+                      .animateTo(_sController.position.maxScrollExtent,
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.decelerate)
+                      .then((value) => {
+                            stateControl.state = PurposeUpdateState.start,
+                            if (purpose.isCompletedForDate(DateTime.now()))
+                              {
+                                bControllers[bControllers.length - 1]
+                                    .animationTrigger(),
+                                stateControl.method = () => widget.purposesBloc
+                                    .add(UpdatePurpose(
+                                        purpose.removeStreak(DateTime.now()))),
+                              }
+                            else
+                              {
+                                fController.animationTrigger(),
+                                stateControl.method = () => widget.purposesBloc
+                                    .add(UpdatePurpose(
+                                        purpose.addStreak(DateTime.now()))),
+                              }
+                          })
+                },
                 backgroundColor: Color.fromARGB(255, 200, 50, 50),
               ),
               floatingActionButtonLocation:
@@ -158,51 +168,72 @@ class _CustomInListState extends State<CustomInList> {
         });
   }
 
-  List<Widget> _buildRowChildren(Purpose purpose, int streak, bool last,
+  List<Widget> _buildRowChildren(Purpose purpose, int index, int streak, bool last,
       double width, double height, double margin) {
     List<Widget> children = [];
     int inLine = last ? rest : widget.itemsPerRow;
     for (int i = 0; i < inLine; i++) {
       BreakableBlock bb = BreakableBlock(
+          key: UniqueKey(),
           width: width,
           height: height,
           margins: EdgeInsets.only(
               right: (children.length == widget.itemsPerRow - 1) ? 0 : margin,
               bottom: margin),
           color: widget.blockColor,
-          controller: bControllers[i],
-          onComplete: () => securePurposeUpdate(UpdateType.remove, purpose)//widget.purposesBloc.add(UpdatePurpose(purpose.removeStreak(DateTime.now())))
-      );
+          controller: bControllers[i + (index * widget.itemsPerRow)],
+          onComplete: () => securePurposeUpdate(UpdateType.remove, purpose));
       children.add(bb);
     }
     if (last) {
       if (fController.resetTrigger != null) fController.resetTrigger();
       children.add(new FusableBlock(
-        width: width,
-        height: height,
-        margins: EdgeInsets.only(
-            right: (children.length == widget.itemsPerRow - 1) ? 0 : margin,
-            bottom: margin),
-        color: widget.blockColor,
-        controller: fController,
-        onComplete: () => securePurposeUpdate(UpdateType.add, purpose)//widget.purposesBloc.add(UpdatePurpose(purpose.addStreak(DateTime.now())))
-      ));
+          width: width,
+          height: height,
+          margins: EdgeInsets.only(
+              right: (children.length == widget.itemsPerRow - 1) ? 0 : margin,
+              bottom: margin),
+          color: widget.blockColor,
+          controller: fController,
+          onComplete: () => securePurposeUpdate(UpdateType.add, purpose)));
     }
     return children;
   }
 
   void securePurposeUpdate(UpdateType type, Purpose purpose) {
-    if(type == UpdateType.add) {
+    if (type == UpdateType.add) {
       widget.purposesBloc.add(UpdatePurpose(purpose.addStreak(DateTime.now())));
-    } else if(type == UpdateType.remove) {
-      widget.purposesBloc.add(UpdatePurpose(purpose.removeStreak(DateTime.now())));
+    } else if (type == UpdateType.remove) {
+      widget.purposesBloc
+          .add(UpdatePurpose(purpose.removeStreak(DateTime.now())));
     }
     stateControl.state = PurposeUpdateState.end;
   }
 
+  void _breakStreak() {
+    int delay = 0;
+    for(int i = bControllers.length-1; i >= 0; i--) {
+      Future.delayed(Duration(milliseconds: delay), () {
+        bControllers[i].animationTriggerSilent();
+      });
+      delay += 200;
+    }
+  }
+
+  void _updateBreakableControllers() {
+    if (bControllers == null ||
+        bControllers.length != rows * widget.itemsPerRow + rest) {
+      bControllers = [];
+      for(int i = 0; i < rows * widget.itemsPerRow + rest; i++) {
+        bControllers.add(new FusableBlockController());
+      }
+      bControllers.forEach((element) {print(element.hashCode);});
+    }
+  }
+
   @override
   void dispose() {
-    if(stateControl.state == PurposeUpdateState.start) stateControl.method();
+    if (stateControl.state == PurposeUpdateState.start) stateControl.method();
     _sController.dispose();
     super.dispose();
   }
