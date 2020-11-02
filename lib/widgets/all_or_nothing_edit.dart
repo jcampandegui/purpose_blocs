@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:purpose_blocs/models/purpose.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class AllOrNothingEdit extends StatefulWidget {
   final closeContainerCallback;
@@ -36,6 +39,9 @@ class _AllOrNothingEditState extends State<AllOrNothingEdit> {
       'D': widget.purpose.repeatDays['7'],
     };
     purposeName.text = widget.purpose.name;
+
+    tz.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation('Europe/Spain'));
     super.initState();
   }
 
@@ -94,9 +100,26 @@ class _AllOrNothingEditState extends State<AllOrNothingEdit> {
                               children: _buildWeekdays(context)
                           ),
                         ),
-                        /*Expanded(
-                            child: Container()
-                        ),*/
+                        Container(
+                          margin: EdgeInsets.only(top: 30, bottom: 10),
+                          child: Text('Recordatorio'),
+                        ),
+                        Container(
+                          child: TimePickerSpinner(
+                            is24HourMode: true,
+                            normalTextStyle: TextStyle(
+                              color: Color.fromARGB(100, 255, 255, 255),
+                              fontWeight: FontWeight.bold
+                            ),
+                            highlightedTextStyle: TextStyle(
+                              color: Colors.white
+                            ),
+                            isForce2Digits: true,
+                            onTimeChange: (time) {
+                              print(time);
+                            },
+                          )
+                        ),
                         Align(
                             alignment: Alignment.center,
                             child: Container(

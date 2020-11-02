@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:purpose_blocs/widgets/purpose_elements/fusable_block_controller.dart';
-import 'package:vibration/vibration.dart';
 
 class BreakableBlock extends StatefulWidget {
   final double width;

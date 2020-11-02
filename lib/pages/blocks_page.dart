@@ -1,16 +1,11 @@
-import 'package:animations/animations.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:purpose_blocs/models/purpose.dart';
-import 'package:purpose_blocs/pages/custom_in_list.dart';
-import 'package:purpose_blocs/widgets/all_or_nothing_creation.dart';
 import 'package:purpose_blocs/widgets/block_grid.dart';
 import 'package:purpose_blocs/widgets/calendar_wrapper.dart';
 import 'package:purpose_blocs/widgets/closed_creation_button.dart';
-import 'package:purpose_blocs/widgets/purpose_elements/purpose_widget_all_or_nothing.dart';
-import 'dart:math';
 
 class BlocksPage extends StatelessWidget {
 
