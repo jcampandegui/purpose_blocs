@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:equatable/equatable.dart';
 
 class Purpose extends Equatable {
@@ -8,29 +6,32 @@ class Purpose extends Equatable {
   final int creationDate;
   final Map<String, bool> streak;
   final Map<String, bool> repeatDays; // [ monday, tuesday, ... sunday ]
+  final bool broken;
 
-  Purpose(this.name, {int creationDate, Map<String, bool> streak, int id, Map<String, bool> repeatDays}) :
+  Purpose(this.name, {int creationDate, Map<String, bool> streak, int id, Map<String, bool> repeatDays, bool broken}) :
         this.id = id ?? null,
         this.creationDate = creationDate ?? DateTime.now().millisecondsSinceEpoch,
         this.streak = streak ?? {},
-        this.repeatDays = repeatDays ?? {'1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true};
+        this.repeatDays = repeatDays ?? {'1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true},
+        this.broken = broken ?? false;
 
-  Purpose copyWith({String id, String name, Map<String, bool> streak, Map<String, bool> repeatDays}) {
+  Purpose copyWith({String id, String name, Map<String, bool> streak, Map<String, bool> repeatDays, bool broken}) {
     return Purpose(
       name ?? this.name,
       creationDate: creationDate ?? this.creationDate,
       streak: streak ?? this.streak,
       repeatDays: repeatDays ?? this.repeatDays,
+      broken: broken ?? this.broken,
       id: id ?? this.id,
     );
   }
 
   @override
-  List<Object> get props => [id, name, creationDate, streak, repeatDays];
+  List<Object> get props => [id, name, creationDate, streak, repeatDays, broken];
 
   @override
   String toString() {
-    return 'Purpose { name: $name, creationDate: $creationDate, streak: $streak, repeatDays. $repeatDays, id: $id }';
+    return 'Purpose { name: $name, creationDate: $creationDate, streak: $streak, repeatDays. $repeatDays, broken: $broken, id: $id }';
   }
 
   Map<String, dynamic> toMap() {
@@ -38,7 +39,8 @@ class Purpose extends Equatable {
       'name': this.name,
       'creationDate': this.creationDate,
       'streak': this.streak,
-      'repeatDays': this.repeatDays
+      'repeatDays': this.repeatDays,
+      'broken': this.broken
     };
   }
 
@@ -48,6 +50,7 @@ class Purpose extends Equatable {
         creationDate: map['creationDate'],
         streak: map['streak'].cast<String, bool>(),
         repeatDays: map['repeatDays'].cast<String, bool>(),
+        broken:  map['broken'],
         id: id
     );
   }
@@ -76,7 +79,6 @@ class Purpose extends Equatable {
 
   String _dateToStreakKey(DateTime date) {
     return '${date.year}-${date.month}-${date.day}';
-    //return '${Random().nextInt(3000)}-${Random().nextInt(12)}-${Random().nextInt(31)}';
   }
 
   Purpose addStreak(DateTime date) {

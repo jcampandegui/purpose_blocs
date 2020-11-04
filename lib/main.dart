@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:purpose_blocs/blocs/calendar/calendar_barrel.dart';
 import 'package:purpose_blocs/blocs/navigation/navigation_barrel.dart';
+import 'package:purpose_blocs/blocs/notifications/notifications_barrel.dart';
 import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:purpose_blocs/blocs/user_preferences/user_preferences_barrel.dart';
 import 'package:purpose_blocs/pages/current_page.dart';
@@ -18,13 +19,17 @@ void main() {
                 create: (context) => UserPreferencesBloc()
                   ..add(LoadPreferences()),
               ),
+              BlocProvider<NotificationsBloc>(
+                create: (context) => NotificationsBloc()
+                  ..add(InitializeNotifications()),
+              ),
               BlocProvider<CalendarBloc>(
                 create: (context) => CalendarBloc(),
               ),
               BlocProvider<PurposesBloc>(
                   create: (context) => PurposesBloc(
                       calendarBloc: BlocProvider.of<CalendarBloc>(context)
-                  )..add(PurposesLoad())
+                  )..add(CheckBrokenPurposes())
               )
             ],
             child: MyApp(),

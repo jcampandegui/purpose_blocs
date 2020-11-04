@@ -33,8 +33,8 @@ class PurposesBloc extends Bloc<PurposesEvent, PurposesState> {
       yield* _mapPurposeUpdatedToState(event);
     } else if (event is DeletePurpose) {
       yield* _mapPurposeDeletedToState(event);
-    } else if (event is LoadPurposesInDay) {
-      yield* _mapLoadPurposesInDayToState(event);
+    } else if(event is CheckBrokenPurposes) {
+      yield* _mapCheckBrokenPurposesToState();
     }
   }
 
@@ -61,10 +61,9 @@ class PurposesBloc extends Bloc<PurposesEvent, PurposesState> {
     yield* _reloadPurposes();
   }
 
-  Stream<PurposesState> _mapLoadPurposesInDayToState(LoadPurposesInDay event) async* {
-    int weekDay = event.date.weekday;
-    final List<Purpose > purposes = await _purposeDao.getForSelectedDay(event.date);
-    yield PurposesLoadSuccess(purposes);
+  Stream<PurposesState>  _mapCheckBrokenPurposesToState() async* {
+    await _purposeDao.markBroken();
+    yield* _reloadPurposes();
   }
 
   Stream<PurposesState> _reloadPurposes({bool all = false}) async* {

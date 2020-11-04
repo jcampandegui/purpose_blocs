@@ -58,4 +58,34 @@ class PurposeDao {
       return Purpose.fromMap(snapshot.key, snapshot.value);
     }).toList();
   }
+
+  Future<int> markBroken() async {
+    try {
+      DateTime now = DateTime.now();
+      DateTime startOfToday = new DateTime(now.year, now.month, now.day, 0, 0, 1);
+      DateTime yesterday = now.subtract(Duration(days: 1));
+      final finder = Finder(filter: Filter.and([
+        Filter.lessThanOrEquals('creationDate', startOfToday.millisecondsSinceEpoch),
+        Filter.equals('repeatDays.${yesterday.weekday}', true),
+        Filter.equals('streak.${_dateToStreakKey(yesterday)}', true)
+      ]));
+      final snapshots = await _purposeStore.find(await _db, finder: finder);
+      List<Purpose> toUpdate = snapshots.map((snapshot) {
+        return Purpose.fromMap(snapshot.key, snapshot.value);
+      }).toList();
+      List<Future> updates = [];
+      toUpdate.forEach((element) {
+        updates.add(update(element.copyWith(broken: true)));
+      });
+      await Future.wait(updates);
+      return 0;
+    } catch(e) {
+      print(e);
+      return -1;
+    }
+  }
+
+  String _dateToStreakKey(DateTime date) {
+    return '${date.year}-${date.month}-${date.day}';
+  }
 }

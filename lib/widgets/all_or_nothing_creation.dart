@@ -18,6 +18,7 @@ class AllOrNothingCreation extends StatefulWidget {
 class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
   final _formKey = GlobalKey<FormState>();
   Map<String, bool> _selectedDays;
+  DateTime _selectedDate;
   TextEditingController purposeName = TextEditingController();
 
   @override
@@ -31,6 +32,7 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
       'S': true,
       'D': true,
     };
+    _selectedDate = DateTime.now();
     super.initState();
   }
 
@@ -92,6 +94,30 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
                         /*Expanded(
                             child: Container()
                         ),*/
+                        Container(
+                          margin: EdgeInsets.only(top: 30, bottom: 10),
+                          child: Text('Fecha de inicio'),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                color: Color.fromARGB(255, 30, 30, 30)
+                            ),
+                          child: InkWell(
+                            onTap: () => _selectDate(context),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(7),
+                                  color: Color.fromARGB(255, 30, 30, 30)
+                              ),
+                              child: Center(
+                                child: Text(_formattedDate()),
+                              ),
+                            )
+                          )
+                        ),
                         Align(
                             alignment: Alignment.center,
                             child: Container(
@@ -117,7 +143,8 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
                                             '5': _selectedDays['V'],
                                             '6': _selectedDays['S'],
                                             '7': _selectedDays['D']
-                                          }
+                                          },
+                                          creationDate: _selectedDate.millisecondsSinceEpoch
                                       );
                                       BlocProvider.of<PurposesBloc>(context).add(AddPurpose(p));
                                       widget.closeContainerCallback();
@@ -170,5 +197,21 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
     setState(() {
       _selectedDays[day] = !_selectedDays[day];
     });
+  }
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate,
+        firstDate: DateTime(2020, 1),
+        lastDate: DateTime(2050));
+    if(picked != null && picked != _selectedDate)
+      setState(() {
+        _selectedDate = picked;
+      });
+  }
+
+  String _formattedDate() {
+    return '${_selectedDate.day > 9 ? _selectedDate.day : '0${_selectedDate.day}'}/${_selectedDate.month > 9 ? _selectedDate.month : '0${_selectedDate.month}'}/${_selectedDate.year}';
   }
 }
