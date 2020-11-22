@@ -67,10 +67,11 @@ class PurposeDao {
       final finder = Finder(filter: Filter.and([
         Filter.lessThanOrEquals('creationDate', startOfToday.millisecondsSinceEpoch),
         Filter.equals('repeatDays.${yesterday.weekday}', true),
-        Filter.equals('streak.${_dateToStreakKey(yesterday)}', true)
+        Filter.equals('streak.${_dateToStreakKey(yesterday)}', null)
       ]));
       final snapshots = await _purposeStore.find(await _db, finder: finder);
       List<Purpose> toUpdate = snapshots.map((snapshot) {
+        print(snapshot);
         return Purpose.fromMap(snapshot.key, snapshot.value);
       }).toList();
       List<Future> updates = [];
