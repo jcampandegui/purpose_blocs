@@ -25,9 +25,10 @@ class CustomInList extends StatefulWidget {
   final Color blockColor;
   final PurposesBloc purposesBloc;
   final int id;
+  final Purpose thePurpose;
 
   const CustomInList(
-      {Key key, this.itemsPerRow, this.blockColor, this.purposesBloc, this.id})
+      {Key key, this.itemsPerRow, this.blockColor, this.purposesBloc, this.id, this.thePurpose})
       : super(key: key);
 
   @override
@@ -57,6 +58,7 @@ class _CustomInListState extends State<CustomInList> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.thePurpose.broken) WidgetsBinding.instance.addPostFrameCallback((_) => _showDialog(context));
     return BlocBuilder<PurposesBloc, PurposesState>(
         cubit: widget.purposesBloc,
         builder: (context, state) {
@@ -218,6 +220,30 @@ class _CustomInListState extends State<CustomInList> {
       });
       delay += 200;
     }
+  }
+
+  void _showDialog(BuildContext context) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Propósito roto"),
+          content: new Text("No has cumplido con el propósito, por lo que va a ser eliminado"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Aceptar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _breakStreak();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _updateBreakableControllers() {

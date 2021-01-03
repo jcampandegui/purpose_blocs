@@ -102,3 +102,9 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// General TODO:
+//  - Blocks mark as failed correctly
+//  - Block gets destroyed when entering a broken block (+ animation)
+//  - Notify when its going to break
+//  - DB export/save

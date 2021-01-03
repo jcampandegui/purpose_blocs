@@ -59,9 +59,10 @@ class PurposeDao {
     }).toList();
   }
 
-  Future<int> markBroken() async {
+  Future<int> markBroken({DateTime debugDate}) async {
     try {
-      DateTime now = DateTime.now();
+      DateTime now = debugDate ?? DateTime.now();
+      print('date in dao: ${now.toString()}');
       DateTime startOfToday = new DateTime(now.year, now.month, now.day, 0, 0, 1);
       DateTime yesterday = now.subtract(Duration(days: 1));
       final finder = Finder(filter: Filter.and([

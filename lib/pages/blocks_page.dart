@@ -116,6 +116,60 @@ class BlocksPage extends StatelessWidget {
                             .add(AddPurpose(p));
                       },
                     )),
+                Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color.fromARGB(200, 50, 200, 50),
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    child: InkWell(
+                      customBorder: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(right: 20, left: 10),
+                            child: Icon(Icons.calendar_today_sharp),
+                          ),
+                          Expanded(
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Actividad con bloques llenos',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                        'Para debugear cosas')
+                                  ],
+                                ),
+                              ))
+                        ],
+                      ),
+                      onTap: () {
+                        Map<String, bool> m = {};
+                        for(int i = 0; i < 30; i++) m['2020-10-$i'] = true;
+                        Purpose p = new Purpose(
+                            DateTime.now().microsecondsSinceEpoch.toString(),
+                            repeatDays: {
+                              '1': Random().nextBool(),
+                              '2': Random().nextBool(),
+                              '3': Random().nextBool(),
+                              '4': Random().nextBool(),
+                              '5': Random().nextBool(),
+                              '6': Random().nextBool(),
+                              '7': Random().nextBool()
+                            },
+                          streak: m
+                        );
+                        BlocProvider.of<PurposesBloc>(context)
+                            .add(AddPurpose(p));
+                      },
+                    )),
               ],
             ),
           );

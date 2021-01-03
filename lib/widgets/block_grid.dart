@@ -56,6 +56,7 @@ class _BlockGridState extends State<BlockGrid> {
                                       blockColor: Color.fromARGB(255, 255, 102, 102),
                                       purposesBloc: purposesBloc,
                                       id: purposes[index].id,
+                                      thePurpose: purposes[index]
                                     )
                                 );
                               }),

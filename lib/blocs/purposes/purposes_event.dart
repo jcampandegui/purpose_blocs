@@ -56,4 +56,14 @@ class DeletePurpose extends PurposesEvent {
   String toString() => 'DeletePurpose { purpose: $purpose }';
 }
 
-class CheckBrokenPurposes extends PurposesEvent {}
+class CheckBrokenPurposes extends PurposesEvent {
+  final DateTime debugDate;
+
+  const CheckBrokenPurposes({this.debugDate});
+
+  @override
+  List<Object> get props => [debugDate];
+
+  @override
+  String toString() => 'CheckBrokenPurposes { date: ${debugDate.toString()} }';
+}

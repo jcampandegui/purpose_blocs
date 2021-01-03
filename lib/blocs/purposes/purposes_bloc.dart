@@ -34,7 +34,7 @@ class PurposesBloc extends Bloc<PurposesEvent, PurposesState> {
     } else if (event is DeletePurpose) {
       yield* _mapPurposeDeletedToState(event);
     } else if(event is CheckBrokenPurposes) {
-      yield* _mapCheckBrokenPurposesToState();
+      yield* _mapCheckBrokenPurposesToState(event);
     }
   }
 
@@ -61,8 +61,9 @@ class PurposesBloc extends Bloc<PurposesEvent, PurposesState> {
     yield* _reloadPurposes();
   }
 
-  Stream<PurposesState>  _mapCheckBrokenPurposesToState() async* {
-    await _purposeDao.markBroken();
+  Stream<PurposesState>  _mapCheckBrokenPurposesToState(CheckBrokenPurposes event) async* {
+    print('check broken called with date: ${event.debugDate.toString()}');
+    await _purposeDao.markBroken(debugDate: event.debugDate);
     yield* _reloadPurposes();
   }
 

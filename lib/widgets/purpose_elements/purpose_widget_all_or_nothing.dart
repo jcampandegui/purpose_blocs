@@ -4,7 +4,8 @@ import 'package:purpose_blocs/blocs/calendar/calendar_barrel.dart';
 import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:purpose_blocs/models/purpose.dart';
 
-enum menuOptions { delete }
+// debug
+enum menuOptions { delete, markBroken }
 
 class PurposeWidgetAllOrNothing extends StatelessWidget {
   final Purpose purpose;
@@ -38,7 +39,10 @@ class PurposeWidgetAllOrNothing extends StatelessWidget {
                         itemBuilder: (context) => [
                               PopupMenuItem(
                                   value: menuOptions.delete,
-                                  child: Text('Borrar'))
+                                  child: Text('Borrar')),
+                              PopupMenuItem(
+                                  value: menuOptions.markBroken,
+                                  child: Text('Broken'))
                             ]),
                   )
                 ],
@@ -84,6 +88,11 @@ class PurposeWidgetAllOrNothing extends StatelessWidget {
       case menuOptions.delete:
         {
           BlocProvider.of<PurposesBloc>(context).add(DeletePurpose(purpose));
+        }
+        break;
+      case menuOptions.markBroken:
+        {
+          BlocProvider.of<PurposesBloc>(context).add(UpdatePurpose(purpose.copyWith(broken: !purpose.broken)));
         }
         break;
 

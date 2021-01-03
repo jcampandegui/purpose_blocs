@@ -5,6 +5,7 @@ import 'package:purpose_blocs/blocs/navigation/navigation_barrel.dart';
 import 'package:purpose_blocs/models/app_tab.dart';
 import 'package:purpose_blocs/pages/blocks_page.dart';
 import 'package:purpose_blocs/pages/custom_in_list.dart';
+import 'package:purpose_blocs/pages/date_debug.dart';
 import 'package:purpose_blocs/pages/settings_page.dart';
 import 'package:purpose_blocs/pages/test_page.dart';
 
@@ -43,7 +44,7 @@ class CurrentPage extends StatelessWidget {
       break;
 
       case AppTab.Dummy3: {
-        return TestPage(text: 'Test page index 3');
+        return DateDebug();
       }
       break;
 
