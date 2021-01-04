@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:purpose_blocs/widgets/navigation_item.dart';
+import 'package:purpose_blocs/widgets/navigation/navigation_item.dart';
 
 class BottomNavigationWidget extends StatelessWidget {
 

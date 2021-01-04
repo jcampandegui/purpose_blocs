@@ -7,7 +7,7 @@ import 'package:purpose_blocs/blocs/notifications/notifications_barrel.dart';
 import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:purpose_blocs/blocs/user_preferences/user_preferences_barrel.dart';
 import 'package:purpose_blocs/pages/current_page.dart';
-import 'package:purpose_blocs/widgets/basic_bottom_nav.dart';
+import 'package:purpose_blocs/widgets/navigation/basic_bottom_nav.dart';
 
 //void main() => runApp(MyApp());
 void main() {
@@ -38,7 +38,6 @@ void main() {
   });
 }
 
-// TODO: Separate displayed page into routes
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -81,9 +80,21 @@ class MyApp extends StatelessWidget {
           bodyText2: TextStyle(
               color: Colors.white
           ),
+        ),
+        dialogTheme: DialogTheme(
+          backgroundColor: Color.fromARGB(255, 50, 50, 50),
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24
+          ),
+          contentTextStyle: TextStyle(
+              color: Colors.white,
+            fontSize: 16
+          )
         )
       ),
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark,
       home: MultiBlocProvider(
         providers: [
           BlocProvider<NavigationBloc>(
