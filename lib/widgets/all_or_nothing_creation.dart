@@ -20,6 +20,8 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
   Map<String, bool> _selectedDays;
   DateTime _selectedDate;
   TextEditingController purposeName = TextEditingController();
+  int _selectedColor;
+  List<Map> colors;
 
   @override
   void initState() {
@@ -33,6 +35,13 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
       'D': true,
     };
     _selectedDate = DateTime.now();
+    _selectedColor = 0;
+    colors = [
+      {'color': Color.fromARGB(255, 255, 100, 100), 'id': 0},
+      {'color': Color.fromARGB(255, 65, 220, 65), 'id': 1},
+      {'color': Color.fromARGB(255, 75, 230, 230), 'id': 2},
+      {'color': Color.fromARGB(255, 250, 200, 50), 'id': 3}
+    ];
     super.initState();
   }
 
@@ -88,7 +97,7 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
                         Container(
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
-                              children: _buildWeekdays(context)
+                              children: _buildWeekdays(context),
                           ),
                         ),
                         /*Expanded(
@@ -118,6 +127,13 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
                             )
                           )
                         ),
+                        Container(
+                          margin: EdgeInsets.only(top: 30),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: _colorPicker(context)
+                          ),
+                        ),
                         Align(
                             alignment: Alignment.center,
                             child: Container(
@@ -129,7 +145,7 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 100,
                                   ),
-                                  color: Color.fromARGB(255, 200, 50, 50),
+                                  color: colors[_selectedColor]['color'],
                                   child: Text('Crear',style: TextStyle(color: Colors.white, fontSize: 16),),
                                   onPressed: () {
                                     if (_formKey.currentState.validate()) {
@@ -144,7 +160,14 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
                                             '6': _selectedDays['S'],
                                             '7': _selectedDays['D']
                                           },
-                                          creationDate: _selectedDate.millisecondsSinceEpoch
+                                          creationDate: _selectedDate.millisecondsSinceEpoch,
+                                          color: colors[_selectedColor]['color'],
+                                          colorDarker: Color.fromARGB(
+                                            255,
+                                            colors[_selectedColor]['color'].red - 30,
+                                            colors[_selectedColor]['color'].green - 30,
+                                            colors[_selectedColor]['color'].blue - 30,
+                                          )
                                       );
                                       BlocProvider.of<PurposesBloc>(context).add(AddPurpose(p));
                                       widget.closeContainerCallback();
@@ -181,7 +204,7 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
           ),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(7),
-              color: _selectedDays[label] ? Color.fromARGB(255, 200, 50, 50) : Color.fromARGB(255, 30, 30, 30)
+              color: _selectedDays[label] ? colors[_selectedColor]['color'] : Color.fromARGB(255, 30, 30, 30)
           ),
           child: Align(
             alignment: Alignment.center,
@@ -213,5 +236,35 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
 
   String _formattedDate() {
     return '${_selectedDate.day > 9 ? _selectedDate.day : '0${_selectedDate.day}'}/${_selectedDate.month > 9 ? _selectedDate.month : '0${_selectedDate.month}'}/${_selectedDate.year}';
+  }
+
+  List<Widget> _colorPicker(BuildContext context) {
+    List<Widget> colorRow = [];
+    for(var c in colors) {
+      colorRow.add(
+          InkWell(
+            onTap: () {
+              setState(() {
+                _selectedColor = c['id'];
+              });
+            },
+            customBorder: CircleBorder(),
+            child: Container(
+              constraints: BoxConstraints.tightFor(
+                  width: 40,
+                  height: 40
+              ),
+              decoration: BoxDecoration(
+                  color: c['color'],
+                  border: Border.all(
+                    color: _selectedColor == c['id'] ? Colors.white : c['color'],
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(20))
+              ),
+            ),
+          )
+      );
+    }
+    return colorRow;
   }
 }

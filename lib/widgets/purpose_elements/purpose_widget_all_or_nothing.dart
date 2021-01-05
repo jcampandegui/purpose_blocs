@@ -40,9 +40,9 @@ class PurposeWidgetAllOrNothing extends StatelessWidget {
                               PopupMenuItem(
                                   value: menuOptions.delete,
                                   child: Text('Borrar')),
-                              PopupMenuItem(
+                              /*PopupMenuItem(
                                   value: menuOptions.markBroken,
-                                  child: Text('Broken'))
+                                  child: Text('Broken'))*/
                             ]),
                   )
                 ],
@@ -53,7 +53,7 @@ class PurposeWidgetAllOrNothing extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: purpose.broken
                         ? Color.fromARGB(255, 150, 150, 150)
-                        : Color.fromARGB(255, 200, 50, 50),
+                        : purpose.colorDarker/*Color.fromARGB(255, 200, 50, 50)*/,
                     borderRadius: BorderRadius.circular(100)),
                 margin: EdgeInsets.only(left: 10, bottom: 10),
                 child: purpose.broken
@@ -87,7 +87,34 @@ class PurposeWidgetAllOrNothing extends StatelessWidget {
     switch (option) {
       case menuOptions.delete:
         {
-          BlocProvider.of<PurposesBloc>(context).add(DeletePurpose(purpose));
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              // return object of type Dialog
+              return AlertDialog(
+                title: new Text("Borrar propósito"),
+                content: new Text(
+                    "¿Seguro que quieres borrar este propósito? Esta acción no se puede deshacer"),
+                actions: <Widget>[
+                  new FlatButton(
+                    child: new Text("Aceptar"),
+                    textColor: Color.fromARGB(255, 255, 100, 100),
+                    onPressed: () {
+                      BlocProvider.of<PurposesBloc>(context).add(DeletePurpose(purpose));
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  new FlatButton(
+                    child: new Text("Cancelar"),
+                    textColor: Color.fromARGB(255, 255, 100, 100),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
         }
         break;
       case menuOptions.markBroken:

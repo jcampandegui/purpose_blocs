@@ -250,7 +250,7 @@ class _CustomInListState extends State<CustomInList> {
           margins: EdgeInsets.only(
               right: (children.length == widget.itemsPerRow - 1) ? 0 : margin,
               bottom: margin),
-          color: widget.blockColor,
+          color: purpose.color,//widget.blockColor,
           controller: bControllers[i + (index * widget.itemsPerRow)],
           onComplete: () => securePurposeUpdate(UpdateType.remove, purpose));
       children.add(bb);
@@ -263,7 +263,7 @@ class _CustomInListState extends State<CustomInList> {
           margins: EdgeInsets.only(
               right: (children.length == widget.itemsPerRow - 1) ? 0 : margin,
               bottom: margin),
-          color: widget.blockColor,
+          color: purpose.color,//widget.blockColor,
           controller: fController,
           onComplete: () => securePurposeUpdate(UpdateType.add, purpose)));
     }

@@ -39,7 +39,7 @@ class _BlockGridState extends State<BlockGrid> {
                                 );
                               },
                               closedElevation: 0,
-                              closedColor: purposes[index].broken ? Color.fromARGB(150, 150, 150, 150) : Color.fromARGB(150, 200, 50, 50),
+                              closedColor: purposes[index].broken ? Color.fromARGB(150, 150, 150, 150) : purposes[index].color/*Color.fromARGB(150, 200, 50, 50)*/,
                               closedShape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
                               ),
@@ -53,7 +53,7 @@ class _BlockGridState extends State<BlockGrid> {
                                     height: MediaQuery.of(context).size.height,
                                     child: CustomInList(
                                       itemsPerRow: 7,
-                                      blockColor: Color.fromARGB(255, 255, 102, 102),
+                                      blockColor: purposes[index].color,
                                       purposesBloc: purposesBloc,
                                       id: purposes[index].id,
                                       thePurpose: purposes[index]

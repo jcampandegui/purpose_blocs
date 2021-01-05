@@ -20,25 +20,27 @@ class BasicBottomNav extends StatelessWidget {
           BottomNavigationBarItem(
               icon: Icon(Icons.widgets),
               label: 'Propóstios',
-              backgroundColor: Color.fromARGB(255, 30, 30, 30)),
+              backgroundColor: Color.fromARGB(255, 30, 30, 30),
+          ),
           BottomNavigationBarItem(
               icon: Icon(Icons.settings),
               label: 'Ajustes',
               backgroundColor: Color.fromARGB(255, 30, 30, 30)),
-          BottomNavigationBarItem(
+          /*BottomNavigationBarItem(
               icon: Icon(Icons.notifications_active),
               label: 'Nav 3',
               backgroundColor: Color.fromARGB(255, 30, 30, 30)),
           BottomNavigationBarItem(
               icon: Icon(Icons.date_range),
               label: 'Nav 4',
-              backgroundColor: Color.fromARGB(255, 30, 30, 30)),
+              backgroundColor: Color.fromARGB(255, 30, 30, 30)),*/
         ],
         currentIndex: _appTabToIndex(appTab),
         onTap: (ind) {
           BlocProvider.of<NavigationBloc>(context)
               .add(UpdateNavigation(_indexToAppTab(ind)));
         },
+        unselectedItemColor: Colors.white,
       );
     });
   }
