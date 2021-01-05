@@ -11,6 +11,7 @@ import 'package:purpose_blocs/widgets/purpose_elements/fusable_block_controller.
 
 enum UpdateType { add, remove }
 enum PurposeUpdateState { stop, start, end }
+enum MoreOptions { delete, edit }
 
 class StateControl {
   PurposeUpdateState state;
@@ -92,27 +93,45 @@ class _CustomInListState extends State<CustomInList> {
                   title: Text(purpose.name),
                   centerTitle: true,
                   actions: [
-                    OpenContainer(
-                        closedBuilder: (_, openContainer) {
-                          return IconButton(
-                            icon: Icon(Icons.more_vert),
-                            onPressed: scheduledDelete ? null : openContainer,
-                            disabledColor: Color.fromARGB(150, 255, 255, 255),
-                          );
-                        },
-                        closedColor: Color.fromARGB(0, 0, 0, 0),
-                        openBuilder: (_, closeContainer) {
-                          return AllOrNothingEdit(
-                            closeContainerCallback: closeContainer,
-                            purposesBloc: widget.purposesBloc,
-                            purpose: purpose,
-                          );
-                        }),
-                    IconButton(
-                      icon: Icon(Icons.delete),
-                      disabledColor: Color.fromARGB(150, 255, 255, 255),
-                      onPressed: scheduledDelete ? null : () => _breakStreak(),
-                    )
+                    PopupMenuButton(
+                        onSelected: (option) =>
+                            _manageMenuClick(option, context),
+                        color: Color.fromARGB(255, 30, 30, 30),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                              value: MoreOptions.edit,
+                              child: OpenContainer(
+                                  closedBuilder: (_, openContainer) {
+                                    return Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text('Editar'),
+                                        Icon(Icons.edit)
+                                      ],
+                                    );
+                                  },
+                                  closedColor: Color.fromARGB(0, 0, 0, 0),
+                                  openBuilder: (_, closeContainer) {
+                                    return AllOrNothingEdit(
+                                      closeContainerCallback: closeContainer,
+                                      purposesBloc: widget.purposesBloc,
+                                      purpose: purpose,
+                                    );
+                                  }),
+                          ),
+                          PopupMenuItem(
+                              value: MoreOptions.delete,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text('Borrar'),
+                                  Icon(Icons.delete)
+                                ],
+                              )
+                          )
+                        ]),
                   ],
                   backgroundColor: Color.fromARGB(0, 0, 0, 0),
                   elevation: 0,
@@ -251,33 +270,6 @@ class _CustomInListState extends State<CustomInList> {
     return children;
   }
 
-  void securePurposeUpdate(UpdateType type, Purpose purpose) {
-    if (type == UpdateType.add) {
-      widget.purposesBloc.add(UpdatePurpose(purpose.addStreak(DateTime.now())));
-    } else if (type == UpdateType.remove) {
-      widget.purposesBloc.add(UpdatePurpose(purpose.removeStreak(DateTime.now())));
-    }
-    stateControl.state = PurposeUpdateState.end;
-  }
-
-  void _breakStreak() {
-    breakTimers = [];
-    deletionStateControl.state = PurposeUpdateState.start;
-    int delay = 0;
-    for (int i = bControllers.length - 1; i >= 0; i--) {
-      Timer t = Timer(Duration(milliseconds: delay), () {
-        bControllers[i].animationTriggerSilent();
-        if (i == 0) deletionStateControl.method();
-      });
-      breakTimers.add(t);
-      delay += 200;
-    }
-  }
-
-  void cancelTimers() {
-    for (Timer t in breakTimers) t.cancel();
-  }
-
   void _showDialog(BuildContext context) {
     // flutter defined function
     bool dialogDismissed = true;
@@ -304,6 +296,66 @@ class _CustomInListState extends State<CustomInList> {
         );
       },
     ).then((value) => {if (dialogDismissed) _breakStreak()});
+  }
+
+  void _manageMenuClick(MoreOptions option, BuildContext context) {
+    if(option == MoreOptions.delete) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+            title: new Text("Borrar propósito"),
+            content: new Text(
+                "¿Seguro que quieres borrar este propósito? Esta acción no se puede deshacer"),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text("Aceptar"),
+                textColor: Color.fromARGB(255, 255, 100, 100),
+                onPressed: () {
+                  widget.purposesBloc.add(DeletePurpose(widget.thePurpose));
+                  Navigator.of(context).pop();
+                },
+              ),
+              new FlatButton(
+                child: new Text("Cancelar"),
+                textColor: Color.fromARGB(255, 255, 100, 100),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void securePurposeUpdate(UpdateType type, Purpose purpose) {
+    if (type == UpdateType.add) {
+      widget.purposesBloc.add(UpdatePurpose(purpose.addStreak(DateTime.now())));
+    } else if (type == UpdateType.remove) {
+      widget.purposesBloc.add(UpdatePurpose(purpose.removeStreak(DateTime.now())));
+    }
+    stateControl.state = PurposeUpdateState.end;
+  }
+
+  void _breakStreak() {
+    breakTimers = [];
+    deletionStateControl.state = PurposeUpdateState.start;
+    int delay = 0;
+    for (int i = bControllers.length - 1; i >= 0; i--) {
+      Timer t = Timer(Duration(milliseconds: delay), () {
+        bControllers[i].animationTriggerSilent();
+        if (i == 0) deletionStateControl.method();
+      });
+      breakTimers.add(t);
+      delay += 200;
+    }
+  }
+
+  void cancelTimers() {
+    for (Timer t in breakTimers) t.cancel();
   }
 
   void _updateBreakableControllers() {

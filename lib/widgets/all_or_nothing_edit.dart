@@ -40,8 +40,8 @@ class _AllOrNothingEditState extends State<AllOrNothingEdit> {
     };
     purposeName.text = widget.purpose.name;
 
-    tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation('Europe/Spain'));
+    //tz.initializeTimeZones();
+    //tz.setLocalLocation(tz.getLocation('Europe/Spain'));
     super.initState();
   }
 
