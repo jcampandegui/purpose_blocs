@@ -122,7 +122,11 @@ Map<String, bool> initStreak(Map<String, bool> streak, int creationDateMs, Map<S
   if(streak == null) { // Initializer called without preset streak
     DateTime creationDate = DateTime.fromMillisecondsSinceEpoch(creationDateMs);
     DateTime today = DateTime.now();
-    if(creationDate.year <= today.year && creationDate.month <= today.month && creationDate.day < today.day) {
+    bool pastFlag = false;
+    if(creationDate.year < today.year) pastFlag = true;
+    else if(creationDate.year == today.year && creationDate.month < creationDate.month) pastFlag = true;
+    else if(creationDate.year == today.year && creationDate.month == creationDate.month && creationDate.day < today.day) pastFlag = true;
+    if(pastFlag) {
       // Creation date is in the past ==> Rebuild blocks til today
       DateTime regressingTime = creationDate;
       Map<String, bool> regressingStreak = {};
