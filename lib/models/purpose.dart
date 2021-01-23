@@ -6,7 +6,7 @@ class Purpose extends Equatable {
   final String name;
   final int creationDate;
   final Map<String, bool> streak;
-  final Map<String, bool> repeatDays; // [ monday, tuesday, ... sunday ]
+  final Map<String, bool> repeatDays; // [ '1', '2', ... '7' ]
   final bool broken;
   final Color color;
   final Color colorDarker;
@@ -14,7 +14,8 @@ class Purpose extends Equatable {
   Purpose(this.name, {int creationDate, Map<String, bool> streak, int id, Map<String, bool> repeatDays, bool broken, Color color, Color colorDarker}) :
         this.id = id ?? null,
         this.creationDate = creationDate ?? DateTime.now().millisecondsSinceEpoch,
-        this.streak = streak ?? {},
+        //this.streak = streak ?? {},
+        this.streak = initStreak(streak, creationDate, repeatDays),
         this.repeatDays = repeatDays ?? {'1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true},
         this.broken = broken ?? false,
         this.color = color ?? Color.fromARGB(255, 255, 100, 100),
@@ -115,4 +116,31 @@ class Purpose extends Equatable {
       id: entity.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
     );
   }*/
+}
+
+Map<String, bool> initStreak(Map<String, bool> streak, int creationDateMs, Map<String, bool> repeatDays) {
+  if(streak == null) { // Initializer called without preset streak
+    DateTime creationDate = DateTime.fromMillisecondsSinceEpoch(creationDateMs);
+    DateTime today = DateTime.now();
+    if(creationDate.year <= today.year && creationDate.month <= today.month && creationDate.day < today.day) {
+      // Creation date is in the past ==> Rebuild blocks til today
+      DateTime regressingTime = creationDate;
+      Map<String, bool> regressingStreak = {};
+      while(!(regressingTime.year == today.year && regressingTime.month == today.month && regressingTime.day == today.day)) {
+        if(repeatDays[regressingTime.weekday.toString()]) {
+          regressingStreak[dateToStreakKey(regressingTime)] = true;
+        }
+        regressingTime = regressingTime.add(Duration(days: 1));
+      }
+      return regressingStreak;
+    } else {
+      return {};
+    }
+  } else {
+    return streak;
+  }
+}
+
+String dateToStreakKey(DateTime date) {
+  return '${date.year}-${date.month}-${date.day}';
 }

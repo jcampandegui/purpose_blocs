@@ -216,6 +216,8 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
     return weekdays;
   }
 
+
+
   void _selectDay(String day) {
     setState(() {
       _selectedDays[day] = !_selectedDays[day];

@@ -30,7 +30,7 @@ void main() {
                   create: (context) => PurposesBloc(
                       calendarBloc: BlocProvider.of<CalendarBloc>(context)
                   )..add(CheckBrokenPurposes())
-              )
+              ),
             ],
             child: MyApp(),
           )
