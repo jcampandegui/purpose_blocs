@@ -309,17 +309,21 @@ class _CustomInListState extends State<CustomInList> {
             content: new Text(
                 "¿Seguro que quieres borrar este propósito? Esta acción no se puede deshacer"),
             actions: <Widget>[
-              new FlatButton(
+              new RaisedButton(
                 child: new Text("Aceptar"),
-                textColor: Color.fromARGB(255, 255, 100, 100),
+                color: Color.fromARGB(255, 255, 100, 100),
+                textColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                 onPressed: () {
                   widget.purposesBloc.add(DeletePurpose(widget.thePurpose));
                   Navigator.of(context).pop();
                 },
               ),
-              new FlatButton(
+              new RaisedButton(
                 child: new Text("Cancelar"),
-                textColor: Color.fromARGB(255, 255, 100, 100),
+                color: Color.fromARGB(255, 75, 75, 75),
+                textColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

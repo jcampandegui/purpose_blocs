@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:purpose_blocs/blocs/calendar/calendar_barrel.dart';
 import 'package:purpose_blocs/blocs/navigation/navigation_barrel.dart';
@@ -92,9 +93,14 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             fontSize: 16
           )
-        )
+        ),
+        colorScheme: ColorScheme.dark(
+          primary: Color.fromARGB(255, 200, 50, 50),
+          surface: Color.fromARGB(255, 200, 50, 50),
+        ),
       ),
       themeMode: ThemeMode.dark,
+      locale: Locale('es', 'ES'),
       home: MultiBlocProvider(
         providers: [
           BlocProvider<NavigationBloc>(

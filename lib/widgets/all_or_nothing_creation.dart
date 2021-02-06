@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl_standalone.dart';
 import 'package:purpose_blocs/blocs/purposes/purposes_barrel.dart';
 import 'package:purpose_blocs/models/purpose.dart';
+import 'package:intl/intl.dart';
 
 class AllOrNothingCreation extends StatefulWidget {
   final closeContainerCallback;
@@ -226,10 +228,23 @@ class _AllOrNothingCreationState extends State<AllOrNothingCreation> {
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: _selectedDate,
-        firstDate: DateTime(2020, 1),
-        lastDate: DateTime(2050));
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2020, 1),
+      lastDate: DateTime(2050),
+      locale: Localizations.localeOf(context),
+      builder: (BuildContext context, Widget child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+            colorScheme: ColorScheme.dark().copyWith(
+              primary: colors[_selectedColor]['color'],
+              surface: colors[_selectedColor]['color'],
+            ),
+          ),
+          child: child,
+        );
+      }
+    );
     if(picked != null && picked != _selectedDate)
       setState(() {
         _selectedDate = picked;
