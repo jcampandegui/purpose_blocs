@@ -29,7 +29,6 @@ dependencies:
   vibration: ^1.7.1
   table_calendar: ^2.2.3
   animations: 1.1.2
-  intl: 0.16.1
   flutter_staggered_animations: "^0.1.2"
   flutter_local_notifications: 3.0.1+2
   flutter_time_picker_spinner: 1.0.6+1

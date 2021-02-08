@@ -30,7 +30,7 @@ class _CalendarWrapperState extends State<CalendarWrapper> {
       child: BlocBuilder<CalendarBloc, DateTime>(
         builder: (context, date) {
           return TableCalendar(
-              locale: 'es_ES',
+              locale: Localizations.localeOf(context).toLanguageTag(),
               calendarController: _calendarController,
               initialCalendarFormat: CalendarFormat.week,
               startingDayOfWeek: StartingDayOfWeek.monday,

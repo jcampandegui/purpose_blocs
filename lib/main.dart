@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:purpose_blocs/blocs/calendar/calendar_barrel.dart';
 import 'package:purpose_blocs/blocs/navigation/navigation_barrel.dart';
 import 'package:purpose_blocs/blocs/notifications/notifications_barrel.dart';
@@ -10,33 +9,30 @@ import 'package:purpose_blocs/blocs/user_preferences/user_preferences_barrel.dar
 import 'package:purpose_blocs/pages/current_page.dart';
 import 'package:purpose_blocs/widgets/navigation/basic_bottom_nav.dart';
 
-//void main() => runApp(MyApp());
 void main() {
-    initializeDateFormatting('es_ES', null).then((_) {
-      runApp(
-          MultiBlocProvider(
-            providers: [
-              BlocProvider<UserPreferencesBloc>(
-                create: (context) => UserPreferencesBloc()
-                  ..add(LoadPreferences()),
-              ),
-              BlocProvider<NotificationsBloc>(
-                create: (context) => NotificationsBloc()
-                  ..add(InitializeNotifications()),
-              ),
-              BlocProvider<CalendarBloc>(
-                create: (context) => CalendarBloc(),
-              ),
-              BlocProvider<PurposesBloc>(
-                  create: (context) => PurposesBloc(
-                      calendarBloc: BlocProvider.of<CalendarBloc>(context)
-                  )..add(CheckBrokenPurposes())
-              ),
-            ],
-            child: MyApp(),
-          )
-      );
-  });
+    runApp(
+        MultiBlocProvider(
+          providers: [
+            BlocProvider<UserPreferencesBloc>(
+              create: (context) => UserPreferencesBloc()
+                ..add(LoadPreferences()),
+            ),
+            BlocProvider<NotificationsBloc>(
+              create: (context) => NotificationsBloc()
+                ..add(InitializeNotifications()),
+            ),
+            BlocProvider<CalendarBloc>(
+              create: (context) => CalendarBloc(),
+            ),
+            BlocProvider<PurposesBloc>(
+                create: (context) => PurposesBloc(
+                    calendarBloc: BlocProvider.of<CalendarBloc>(context)
+                )..add(CheckBrokenPurposes())
+            ),
+          ],
+          child: MyApp(),
+        )
+    );
 }
 
 class MyApp extends StatelessWidget {
@@ -100,7 +96,14 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: ThemeMode.dark,
-      locale: Locale('es', 'ES'),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      supportedLocales: [
+        const Locale('en', 'US'),
+        const Locale('es', 'ES')
+      ],
       home: MultiBlocProvider(
         providers: [
           BlocProvider<NavigationBloc>(
@@ -121,7 +124,4 @@ class MyApp extends StatelessWidget {
 }
 
 // General TODO:
-//  - Blocks mark as failed correctly
-//  - Block gets destroyed when entering a broken block (+ animation)
-//  - Notify when its going to break
 //  - DB export/save
