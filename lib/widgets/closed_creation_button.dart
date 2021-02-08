@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:purpose_blocs/widgets/all_or_nothing_creation.dart';
@@ -7,13 +9,15 @@ class ClosedCreationButton extends StatelessWidget {
   final String description;
   final IconData icon;
   final String openedWidget;
+  final Function autoclose;
 
   const ClosedCreationButton({
     Key key,
     this.title,
     this.description,
     this.icon,
-    this.openedWidget
+    this.openedWidget,
+    this.autoclose
   }) : super(key: key);
 
   @override
@@ -59,8 +63,18 @@ class ClosedCreationButton extends StatelessWidget {
         transitionDuration: Duration(milliseconds: 400),
         openColor: Theme.of(context).scaffoldBackgroundColor,
         openBuilder: (context, closeContainer) {
-          if(openedWidget == 'allOrNothing') return AllOrNothingCreation(closeContainerCallback: closeContainer,);
+          //if(openedWidget == 'allOrNothing') return AllOrNothingCreation(closeContainerCallback: closeContainer,);
+          if(openedWidget == 'allOrNothing') {
+            return AllOrNothingCreation(closeContainerCallback: () => {
+              Navigator.pop(context),
+              _hideBottomSheet(context)
+            });
+          }
           return null;
         });
+  }
+  
+  Future<void> _hideBottomSheet(BuildContext context) {
+    return Future.delayed(Duration(milliseconds: 500)).then((value) => {autoclose()});
   }
 }

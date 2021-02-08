@@ -63,6 +63,7 @@ class BlocksPage extends StatelessWidget {
                       description: 'Actividades que se completan un sóla vez',
                       icon: Icons.calendar_today,
                       openedWidget: 'allOrNothing',
+                      autoclose: () => hideBottommSheet(context)
                     )
                 ),
                 Container(
@@ -174,5 +175,9 @@ class BlocksPage extends StatelessWidget {
             ),
           );
         });
+  }
+
+  void hideBottommSheet(BuildContext context) {
+    Navigator.pop(context);
   }
 }
