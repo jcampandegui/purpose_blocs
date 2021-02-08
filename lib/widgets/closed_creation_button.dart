@@ -9,7 +9,7 @@ class ClosedCreationButton extends StatelessWidget {
   final String description;
   final IconData icon;
   final String openedWidget;
-  final Function autoclose;
+  final Function autoClose;
 
   const ClosedCreationButton({
     Key key,
@@ -17,7 +17,7 @@ class ClosedCreationButton extends StatelessWidget {
     this.description,
     this.icon,
     this.openedWidget,
-    this.autoclose
+    this.autoClose
   }) : super(key: key);
 
   @override
@@ -49,7 +49,8 @@ class ClosedCreationButton extends StatelessWidget {
                               this.description)
                         ],
                       ),
-                    ))
+                    )
+                )
               ],
             ),
             onTap: openContainer,
@@ -63,7 +64,6 @@ class ClosedCreationButton extends StatelessWidget {
         transitionDuration: Duration(milliseconds: 400),
         openColor: Theme.of(context).scaffoldBackgroundColor,
         openBuilder: (context, closeContainer) {
-          //if(openedWidget == 'allOrNothing') return AllOrNothingCreation(closeContainerCallback: closeContainer,);
           if(openedWidget == 'allOrNothing') {
             return AllOrNothingCreation(closeContainerCallback: () => {
               Navigator.pop(context),
@@ -75,6 +75,6 @@ class ClosedCreationButton extends StatelessWidget {
   }
   
   Future<void> _hideBottomSheet(BuildContext context) {
-    return Future.delayed(Duration(milliseconds: 500)).then((value) => {autoclose()});
+    return Future.delayed(Duration(milliseconds: 500)).then((value) => {autoClose()});
   }
 }

@@ -8,21 +8,36 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   NotificationsBloc() : super(InitializingNotifications());
 
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  AndroidInitializationSettings androidInitializationSettings;
+  IOSInitializationSettings iosInitializationSettings;
+  InitializationSettings initializationSettings;
+
   @override
   Stream<NotificationsState> mapEventToState(NotificationsEvent event) async* {
     if (event is InitializeNotifications) {
       yield* _mapInitializeNotificationsToState();
+    } else if(event is ScheduleNotification) {
+      yield* _mapScheduleNotificationToState(event);
     }
   }
 
   Stream<NotificationsState> _mapInitializeNotificationsToState() async* {
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    /*FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     AndroidInitializationSettings androidInitializationSettings = AndroidInitializationSettings('app_icon');
     IOSInitializationSettings iosInitializationSettings = IOSInitializationSettings(
         onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     InitializationSettings initializationSettings = InitializationSettings(
       android: androidInitializationSettings,
       iOS: iosInitializationSettings
+    );*/
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    androidInitializationSettings = AndroidInitializationSettings('app_icon');
+    iosInitializationSettings = IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+    initializationSettings = InitializationSettings(
+        android: androidInitializationSettings,
+        iOS: iosInitializationSettings
     );
     final NotificationAppLaunchDetails notificationAppLaunchDetails =
       await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
@@ -34,6 +49,30 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     yield NotificationsReady(
         flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
         launchedByNotification: notificationAppLaunchDetails.didNotificationLaunchApp
+    );
+  }
+
+  Stream<NotificationsState> _mapScheduleNotificationToState(ScheduleNotification event) async* {
+    AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+        'Channel ID', 'Channel title', 'Channel body',
+        priority: Priority.high,
+        importance: Importance.max,
+        ticker: 'test'
+    );
+
+    IOSNotificationDetails iosNotificationDetails = IOSNotificationDetails();
+
+    NotificationDetails notificationDetails = NotificationDetails(
+        android: androidNotificationDetails,
+        iOS: iosNotificationDetails
+    );
+
+    await flutterLocalNotificationsPlugin.show(
+        0,
+        'Esto es el titulo',
+        'Esto es el cuerpo',
+        notificationDetails,
+        payload: 'This is the payload'
     );
   }
 

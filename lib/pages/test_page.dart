@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:purpose_blocs/blocs/notifications/notifications_barrel.dart';
+import 'package:purpose_blocs/models/purpose.dart';
 
 class TestPage extends StatelessWidget {
   final String text;
@@ -18,7 +19,15 @@ class TestPage extends StatelessWidget {
           if(state is NotificationsReady) {
             return Scaffold(
               body: Center(
-                child: Text(state.launchedByNotification ? 'Launched by notification' : 'Normal launch'),
+                child: Column(
+                  children: [
+                    Text(state.launchedByNotification ? 'Launched by notification' : 'Normal launch'),
+                    RaisedButton(
+                        child: Text('Bloc notification'),
+                        onPressed: () => BlocProvider.of<NotificationsBloc>(context).add(ScheduleNotification(when: DateTime.now(), purpose: new Purpose('example')))
+                    )
+                  ],
+                )
               ),
               floatingActionButton: FloatingActionButton(
                   child: Icon(Icons.add),

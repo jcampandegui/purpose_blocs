@@ -59,11 +59,11 @@ class BlocksPage extends StatelessWidget {
                     ),*/
                     margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     child: ClosedCreationButton(
-                      title: 'Actividad todo o nada',
-                      description: 'Actividades que se completan un sóla vez',
-                      icon: Icons.calendar_today,
-                      openedWidget: 'allOrNothing',
-                      autoclose: () => hideBottommSheet(context)
+                        title: 'Actividad todo o nada',
+                        description: 'Actividades que se completan un sóla vez',
+                        icon: Icons.calendar_today,
+                        openedWidget: 'allOrNothing',
+                        autoClose: () => hideBottommSheet(context)
                     )
                 ),
                 Container(

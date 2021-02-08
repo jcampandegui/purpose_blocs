@@ -26,11 +26,11 @@ class BasicBottomNav extends StatelessWidget {
               icon: Icon(Icons.settings),
               label: 'Ajustes',
               backgroundColor: Color.fromARGB(255, 30, 30, 30)),
-          /*BottomNavigationBarItem(
+          BottomNavigationBarItem(
               icon: Icon(Icons.notifications_active),
               label: 'Nav 3',
               backgroundColor: Color.fromARGB(255, 30, 30, 30)),
-          BottomNavigationBarItem(
+          /*BottomNavigationBarItem(
               icon: Icon(Icons.date_range),
               label: 'Nav 4',
               backgroundColor: Color.fromARGB(255, 30, 30, 30)),*/
