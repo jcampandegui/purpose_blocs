@@ -14,8 +14,7 @@ class Purpose extends Equatable {
   Purpose(this.name, {int creationDate, Map<String, bool> streak, int id, Map<String, bool> repeatDays, bool broken, Color color, Color colorDarker}) :
         this.id = id ?? null,
         this.creationDate = creationDate ?? DateTime.now().millisecondsSinceEpoch,
-        //this.streak = streak ?? {},
-        this.streak = initStreak(streak, creationDate, repeatDays),
+        this.streak = initStreak(streak, creationDate ?? DateTime.now().millisecondsSinceEpoch, repeatDays),
         this.repeatDays = repeatDays ?? {'1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true},
         this.broken = broken ?? false,
         this.color = color ?? Color.fromARGB(255, 255, 100, 100),

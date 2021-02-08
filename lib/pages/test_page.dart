@@ -20,12 +20,25 @@ class TestPage extends StatelessWidget {
             return Scaffold(
               body: Center(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(state.launchedByNotification ? 'Launched by notification' : 'Normal launch'),
                     RaisedButton(
                         child: Text('Bloc notification'),
                         onPressed: () => BlocProvider.of<NotificationsBloc>(context).add(ScheduleNotification(when: DateTime.now(), purpose: new Purpose('example')))
-                    )
+                    ),
+                    RaisedButton(
+                        child: Text('Repeatin bloc notification'),
+                        onPressed: () => BlocProvider.of<NotificationsBloc>(context).add(ScheduleRepeatingNotification(when: DateTime.now(), purpose: new Purpose('example')))
+                    ),
+                    RaisedButton(
+                        child: Text('Show active notifications'),
+                        onPressed: () => BlocProvider.of<NotificationsBloc>(context).add(ShowCurrentNotifications())
+                    ),
+                    RaisedButton(
+                        child: Text('Cancel all notifications'),
+                        onPressed: () => BlocProvider.of<NotificationsBloc>(context).add(CancelAllNotifications())
+                    ),
                   ],
                 )
               ),

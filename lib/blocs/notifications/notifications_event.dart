@@ -25,3 +25,23 @@ class ScheduleNotification extends NotificationsEvent {
   @override
   String toString() => 'ScheduleNotification { when: $when, purpose: $purpose }';
 }
+
+class ScheduleRepeatingNotification extends NotificationsEvent {
+  final DateTime when;
+  final Purpose purpose;
+
+  const ScheduleRepeatingNotification({
+    this.when,
+    this.purpose
+  });
+
+  @override
+  List<Object> get props => [when, purpose];
+
+  @override
+  String toString() => 'ScheduleRepeatingNotification { when: $when, purpose: $purpose }';
+}
+
+class ShowCurrentNotifications extends NotificationsEvent {}
+
+class CancelAllNotifications extends NotificationsEvent {}
